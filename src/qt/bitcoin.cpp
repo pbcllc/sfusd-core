@@ -203,7 +203,7 @@ class BitcoinApplication: public QApplication
 {
     Q_OBJECT
 public:
-    explicit BitcoinApplication(int &argc, char **argv);
+    BitcoinApplication();
     ~BitcoinApplication();
 
 #ifdef ENABLE_WALLET
@@ -323,8 +323,11 @@ void BitcoinCore::shutdown()
     }
 }
 
-BitcoinApplication::BitcoinApplication(int &argc, char **argv):
-    QApplication(argc, argv),
+static int qt_argc = 1;
+static const char* qt_argv = "smartusd-qt";
+
+BitcoinApplication::BitcoinApplication():
+    QApplication(qt_argc, const_cast<char **>(&qt_argv)),
     coreThread(0),
     optionsModel(0),
     clientModel(0),
@@ -564,7 +567,7 @@ int main(int argc, char *argv[])
     Q_INIT_RESOURCE(bitcoin);
     Q_INIT_RESOURCE(bitcoin_locale);
 
-    BitcoinApplication app(argc, argv);
+    BitcoinApplication app;
 #if QT_VERSION > 0x050100
     // Generate high-dpi pixmaps
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
