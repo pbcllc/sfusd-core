@@ -5,6 +5,8 @@ Power Block Coin Core integration/staging tree
 
 https://powerblockcoin.com
 
+Official Blockexplorer: https://explorer.pbc.kmd.sh/
+
 What is Power Block Coin? 
 ----------------
 
