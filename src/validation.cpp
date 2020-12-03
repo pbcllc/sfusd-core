@@ -54,6 +54,9 @@
 #include <boost/thread.hpp>
 #include <boost/foreach.hpp>
 
+using boost::placeholders::_1;
+using boost::placeholders::_2;
+
 #if defined(NDEBUG)
 # error "Bitcoin cannot be compiled without assertions."
 #endif

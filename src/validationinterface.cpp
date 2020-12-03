@@ -20,6 +20,10 @@
 
 #include <boost/signals2/signal.hpp>
 
+using boost::placeholders::_1;
+using boost::placeholders::_2;
+using boost::placeholders::_3;
+
 struct MainSignalsInstance {
     boost::signals2::signal<void (const CBlockIndex *, const CBlockIndex *, bool fInitialDownload)> UpdatedBlockTip;
     boost::signals2::signal<void (const CTransactionRef &)> TransactionAddedToMempool;
