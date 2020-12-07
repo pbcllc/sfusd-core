@@ -1613,6 +1613,7 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
                 // spent being checked as a part of CScriptCheck.
 
                 // Verify signature
+                std::cerr << __func__ << " _connectingBlockTxns=" << _connectingBlockTxns.get() << " _connectingBlockTxns->size()=" << (_connectingBlockTxns != nullptr ? _connectingBlockTxns->size() : 0) << std::endl;
                 CScriptCheck check(coin.out, tx, i, flags, cacheSigStore, &txdata, _connectingBlockTxns);
                 if (pvChecks) {
                     pvChecks->push_back(CScriptCheck());
