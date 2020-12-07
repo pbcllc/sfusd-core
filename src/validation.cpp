@@ -5769,6 +5769,15 @@ int32_t powerblockcoin_priceget(int64_t *buf64,int32_t ind,int32_t height,int32_
     return(retval);
 }
 
+// for convenience, calls eval's get transaction version if eval is set
+bool myGetTransactionEval(Eval *eval, const uint256 &hash, CTransaction &txOut, uint256 &hashBlock)
+{
+    if (eval)
+        return eval->GetTxUnconfirmed(hash, txOut, hashBlock);
+    else
+        return myGetTransaction(hash, txOut, hashBlock);
+}
+
 // Extra GetTransaction version that looks into current block txns or in mempool
 // for use in cc validation code
 bool myGetTransactionBlockTxns(const uint256 &hash, CTransaction &txOut, uint256 &hashBlock, BlockTxnsPtr blockTxns)

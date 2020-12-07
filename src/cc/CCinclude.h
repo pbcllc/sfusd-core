@@ -923,8 +923,8 @@ bits256 bits256_doublesha256(char *deprecated,uint8_t *data,int32_t datalen);
 /*! \endcond */
 
 /*! \cond INTERNAL */
-int64_t TotalPubkeyNormalInputs(const CTransaction &tx, const CPubKey &pubkey);
-int64_t TotalPubkeyCCInputs(const CTransaction &tx, const CPubKey &pubkey);
+int64_t TotalPubkeyNormalInputs(const CTransaction &tx, const CPubKey &pubkey, Eval *eval);
+int64_t TotalPubkeyCCInputs(const CTransaction &tx, const CPubKey &pubkey, Eval *eval);
 inline std::string STR_TOLOWER(const std::string &str) { std::string out; for (std::string::const_iterator i = str.begin(); i != str.end(); i++) out += std::tolower(*i); return out; }
 /*! \endcond */
 

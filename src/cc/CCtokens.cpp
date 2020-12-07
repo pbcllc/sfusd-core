@@ -472,7 +472,7 @@ int64_t IsTokensvout(bool goDeeper, bool checkPubkeys /*<--not used, always true
                             && !IsTokenMarkerVout(vout))  // should not be marker here
                             ccOutputs += vout.nValue;
 
-                    int64_t normalInputs = TotalPubkeyNormalInputs(tx, origPubkey);  // check if normal inputs are really signed by originator pubkey (someone not cheating with originator pubkey)
+                    int64_t normalInputs = TotalPubkeyNormalInputs(tx, origPubkey, eval);  // check if normal inputs are really signed by originator pubkey (someone not cheating with originator pubkey)
                     LOGSTREAM("cctokens", CCLOG_DEBUG2, stream << indentStr << "IsTokensvout() normalInputs=" << normalInputs << " ccOutputs=" << ccOutputs << " for tokenbase=" << reftokenid.GetHex() << std::endl);
 
                     if (normalInputs >= ccOutputs) {
@@ -828,7 +828,7 @@ std::string CreateToken(int64_t txfee, int64_t tokensupply, std::string name, st
 	if (AddNormalinputs2(mtx, tokensupply + 2 * txfee, 64) > 0)  // add normal inputs only from mypk
 	{
 
-        int64_t mypkInputs = TotalPubkeyNormalInputs(mtx, mypk);  
+        int64_t mypkInputs = TotalPubkeyNormalInputs(mtx, mypk, NULL);  
         if (mypkInputs < tokensupply) {     // check that tokens amount are really issued with mypk (because in the wallet there maybe other privkeys)
             CCerror = "some inputs signed not with -pubkey=pk";
             return std::string("");
