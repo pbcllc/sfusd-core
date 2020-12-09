@@ -133,7 +133,6 @@ bool Eval::GetSpendsConfirmed(uint256 hash, std::vector<CTransaction> &spends) c
 
 bool Eval::GetTxUnconfirmed(const uint256 &hash, CTransaction &txOut, uint256 &hashBlock) const
 {
-    std::cerr << __func__ << " called for hash=" << hash.GetHex() << " blockTxns.get()=" << blockTxns.get() << " blockTxns.size()=" << (blockTxns != nullptr ? blockTxns->size() : 0) << std::endl;
     return(myGetTransactionBlockTxns(hash, txOut,hashBlock, blockTxns)); // call myGetTransaction that could look in block's txns instead of mempool, what is important in the cc validation at the block connection
     /*if (!myGetTransaction(hash, txOut,hashBlock)) {
         return(myGetTransaction(hash, txOut,hashBlock));

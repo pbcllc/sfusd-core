@@ -1613,7 +1613,6 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
                 // spent being checked as a part of CScriptCheck.
 
                 // Verify signature
-                std::cerr << __func__ << " _connectingBlockTxns=" << _connectingBlockTxns.get() << " _connectingBlockTxns->size()=" << (_connectingBlockTxns != nullptr ? _connectingBlockTxns->size() : 0) << std::endl;
                 CScriptCheck check(coin.out, tx, i, flags, cacheSigStore, &txdata, _connectingBlockTxns);
                 if (pvChecks) {
                     pvChecks->push_back(CScriptCheck());
@@ -5792,7 +5791,6 @@ bool myGetTransactionBlockTxns(const uint256 &hash, CTransaction &txOut, uint256
             // if a block is connecting then search in its txns instead of mempool
             // as mempool txns should not affect the txns from a connecting block
             auto foundit = blockTxns->find(hash);
-            std::cerr << __func__ << " search blockTxns for hash=" << hash.GetHex() << " foundit != blockTxns->end() is " << (foundit != blockTxns->end()) << std::endl;
             if (foundit != blockTxns->end())
             {
                 txOut = foundit->second;
@@ -5801,7 +5799,6 @@ bool myGetTransactionBlockTxns(const uint256 &hash, CTransaction &txOut, uint256
         }
         else
         {
-            std::cerr << __func__ << " search mempool for hash=" << hash.GetHex() << std::endl;
             //LogPrintf("check mempool %s\n",hash.GetHex().c_str());
             if (mempool.lookup(hash, txOut))
             {
