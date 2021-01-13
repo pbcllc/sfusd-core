@@ -54,6 +54,13 @@
 #include <boost/thread.hpp>
 #include <boost/foreach.hpp>
 
+#if BOOST_VERSION >= 107300
+#if !defined(BOOST_BIND_GLOBAL_PLACEHOLDERS)
+using boost::placeholders::_1;
+using boost::placeholders::_2;
+#endif
+#endif
+
 #if defined(NDEBUG)
 # error "Bitcoin cannot be compiled without assertions."
 #endif

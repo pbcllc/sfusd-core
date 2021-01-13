@@ -20,6 +20,14 @@
 
 #include <boost/signals2/signal.hpp>
 
+#if BOOST_VERSION >= 107300
+#if !defined(BOOST_BIND_GLOBAL_PLACEHOLDERS)
+using boost::placeholders::_1;
+using boost::placeholders::_2;
+using boost::placeholders::_3;
+#endif
+#endif
+
 struct MainSignalsInstance {
     boost::signals2::signal<void (const CBlockIndex *, const CBlockIndex *, bool fInitialDownload)> UpdatedBlockTip;
     boost::signals2::signal<void (const CTransactionRef &)> TransactionAddedToMempool;
