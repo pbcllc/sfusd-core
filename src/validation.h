@@ -23,6 +23,7 @@
 #include <versionbits.h>
 #include <spentindex.h>
 #include <txmempool.h>
+#include "cc/eval.h"
 
 #include <algorithm>
 #include <exception>
@@ -891,6 +892,7 @@ int64_t powerblockcoin_priceave(int64_t *buf,int64_t *correlated,int32_t cskip);
 int32_t powerblockcoin_priceget(int64_t *buf64,int32_t ind,int32_t height,int32_t numblocks);
 bool myGetTransaction(const uint256 &hash, CTransaction &txOut, uint256 &hashBlock);
 bool myGetTransactionBlockTxns(const uint256 &hash, CTransaction &txOut, uint256 &hashBlock, BlockTxnsPtr blockTxns);
+bool myGetTransactionEval(Eval *eval, const uint256 &hash, CTransaction &txOut, uint256 &hashBlock);
 
 uint64_t powerblockcoin_block_prg(uint32_t nHeight);
 int32_t iguana_rwnum(int32_t rwflag,uint8_t *serialized,int32_t len,void *endianedp);

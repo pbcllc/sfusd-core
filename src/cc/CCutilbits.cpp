@@ -17,6 +17,7 @@
  CCutilbits.cpp has very low level functions that are universally useful for all contracts and have low dependency from other sources
  */
 
+#include "util.h"
 #include "CCinclude.h"
 
 int32_t unstringbits(char *buf,uint64_t bits)
@@ -99,17 +100,15 @@ CPubKey pubkey2pk(std::vector<uint8_t> vpubkey)
     return(pk);
 }
 
+// in powerblockcoin category is either ccinfo or ccdebug
 void CCLogPrintStr(const char *category, int level, const std::string &str)
 {
     if (level < 0)
         level = 0;
     if (level > CCLOG_MAXLEVEL)
         level = CCLOG_MAXLEVEL;
-//Accept any log category from cc
-//    for (int i = level; i <= CCLOG_MAXLEVEL; i++)
-//        if (LogAcceptCategory((std::string(category) + std::string("-") + std::to_string(i)).c_str()) ||     // '-debug=cctokens-0', '-debug=cctokens-1',...
-//            i == 0 && LogAcceptCategory(std::string(category).c_str())) {                                  // also supporting '-debug=cctokens' for CCLOG_INFO
-            LogPrintStr(str);
-//            break;
-//        }
+
+    if (LogAcceptCategory(BCLog::CCINFO) || level > 0 && LogAcceptCategory(BCLog::CCDEBUG)) {                                  
+        LogPrintStr(str);
+    }
 }

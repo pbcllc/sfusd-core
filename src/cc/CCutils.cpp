@@ -728,13 +728,13 @@ CPubKey check_signing_pubkey(CScript scriptSig)
 
 
 // returns total of normal inputs signed with this pubkey
-int64_t TotalPubkeyNormalInputs(const CTransaction &tx, const CPubKey &pubkey)
+int64_t TotalPubkeyNormalInputs(const CTransaction &tx, const CPubKey &pubkey, Eval *eval)
 {
     int64_t total = 0;
     for (auto vin : tx.vin) {
         CTransaction vintx;
         uint256 hashBlock;
-        if (!IsCCInput(vin.scriptSig) && myGetTransaction(vin.prevout.hash, vintx, hashBlock)) {
+        if (!IsCCInput(vin.scriptSig) && myGetTransactionEval(eval, vin.prevout.hash, vintx, hashBlock)) {
             typedef std::vector<unsigned char> valtype;
             std::vector<valtype> vSolutions;
             txnouttype whichType;
@@ -757,7 +757,7 @@ int64_t TotalPubkeyNormalInputs(const CTransaction &tx, const CPubKey &pubkey)
 }
 
 // returns total of CC inputs signed with this pubkey
-int64_t TotalPubkeyCCInputs(const CTransaction &tx, const CPubKey &pubkey)
+int64_t TotalPubkeyCCInputs(const CTransaction &tx, const CPubKey &pubkey, Eval *eval)
 {
     int64_t total = 0;
     for (auto vin : tx.vin) {
@@ -767,7 +767,7 @@ int64_t TotalPubkeyCCInputs(const CTransaction &tx, const CPubKey &pubkey)
                 if (vinPubkey == pubkey) {
                     CTransaction vintx;
                     uint256 hashBlock;
-                    if (myGetTransaction(vin.prevout.hash, vintx, hashBlock)) {
+                    if (myGetTransactionEval(eval, vin.prevout.hash, vintx, hashBlock)) {
                         total += vintx.vout[vin.prevout.n].nValue;
                     }
                 }

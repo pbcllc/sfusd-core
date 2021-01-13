@@ -38,6 +38,7 @@ extern pthread_mutex_t KOMODO_CC_mutex;
 bool RunCCEval(const CC *cond, const CTransaction &tx, unsigned int nIn, BlockTxnsPtr blockTxns)
 {
     EvalRef eval;
+    eval->blockTxns = blockTxns;
     pthread_mutex_lock(&KOMODO_CC_mutex);
     bool out = eval->Dispatch(cond, tx, nIn);
     pthread_mutex_unlock(&KOMODO_CC_mutex);
@@ -55,14 +56,18 @@ bool RunCCEval(const CC *cond, const CTransaction &tx, unsigned int nIn, BlockTx
             tx.vin[nIn].prevout.hash.GetHex().data());
     if (eval->state.IsError()) LogPrintf( "Culprit: %s\n", EncodeHexTx(tx).data());
     CTransaction tmp; 
-    if (mempool.lookup(tx.GetHash(), tmp))
+
+    // TODO: decide on this code, normally tx are cleared from mempool at the end of ConnectBlock(). 
+    // for a connecting block we do not store its txns in mempool any more
+    // Anyway, this looks like a special case, removed as it causes deadlocks
+    /*if (mempool.lookup(tx.GetHash(), tmp))
     {
         // This is to remove a payments airdrop if it gets stuck in the mempool. 
         // Miner will mine 1 invalid block, but doesnt stop them mining until a restart.
         // This would almost never happen in normal use.
         std::list<CTransaction> dummy;
         mempool.remove(tx,dummy,true);
-    }
+    }*/
     return false;
 }
 
