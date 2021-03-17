@@ -1348,7 +1348,7 @@ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
     // currently we haven't any halvings (could be changed in future), fixed miner reward is 1 PBC per block
     CAmount nSubsidy = 1 * COIN;
     if (1 == nHeight) {
-        nSubsidy = 1000000000LL * COIN;
+        nSubsidy = 99000000000LL ; // updated for SmartFi (SFUSD) relaunch
     }
     return nSubsidy;
 }
