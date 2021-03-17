@@ -40,9 +40,9 @@ QString BitcoinUnits::longName(int unit)
 {
     switch(unit)
     {
-    case BTC: return QString("PBC");
-    case mBTC: return QString("mPBC");
-    case uBTC: return QString::fromUtf8("µPBC");
+    case BTC: return QString("SFUSD");
+    case mBTC: return QString("mSFUSD");
+    case uBTC: return QString::fromUtf8("µSFUSD");
     default: return QString("???");
     }
 }
