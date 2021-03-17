@@ -336,7 +336,7 @@ static void FindFilesToPrune(std::set<int>& setFilesToPrune, uint64_t nPruneAfte
 bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsViewCache &inputs, bool fScriptChecks, unsigned int flags, bool cacheSigStore, bool cacheFullScriptStore, PrecomputedTransactionData& txdata, BlockTxnsPtr _connectingBlockTxns, std::vector<CScriptCheck> *pvChecks = nullptr);
 static FILE* OpenUndoFile(const CDiskBlockPos &pos, bool fReadOnly = false);
 
-char ASSETCHAINS_SYMBOL[65] = { "PBC" };
+char ASSETCHAINS_SYMBOL[65] = { "SFUSD" };
 
 UniValue powerblockcoin_snapshot(int top)
 {
@@ -1345,8 +1345,10 @@ bool ReadBlockHeaderFromDisk(CBlockHeader& block, const CBlockIndex* pindex, con
 
 CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
 {
-    // currently we haven't any halvings (could be changed in future), fixed miner reward is 1 PBC per block
-    CAmount nSubsidy = 1 * COIN;
+    // currently we haven't any halvings (could be changed in future), fixed miner reward is 0 SFUSD per block (empty blocks)
+    // this likely undergoing update with custom distribution algorithm and loan CC
+    // pre-mint for SmartFi platform is in block from nheight 1
+    CAmount nSubsidy = 0 * COIN;
     if (1 == nHeight) {
         nSubsidy = 99000000000LL ; // updated for SmartFi (SFUSD) relaunch
     }
