@@ -113,8 +113,8 @@ public:
         consensus.BIP65Height = 128;
         consensus.BIP66Height = 128;
         consensus.powLimit = uint256S("00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.nPowTargetTimespan = 30 * 60; // 30 minutes (60 blocks)
-        consensus.nPowTargetSpacing  = 30;      // 30 seconds
+        consensus.nPowTargetTimespan = 20 * 60; // 20 minutes (60 blocks)
+        consensus.nPowTargetSpacing  = 20;      // 20 seconds
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 1916; // 95% of 2016
@@ -157,7 +157,7 @@ public:
         pchMessageStart[0] = 0xca;
         pchMessageStart[1] = 0x33;
         pchMessageStart[2] = 0x30;
-        pchMessageStart[3] = 0xda;
+        pchMessageStart[3] = 0x37; //updated for SmartFi (SFUSD) relaunch
         nDefaultPort = 47777;
         nPruneAfterHeight = 100000;
 
@@ -204,7 +204,7 @@ public:
         vSeeds.clear();
         vSeeds.emplace_back("seed.pbc.kmd.sh"); // static dns seeder
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,60);
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,63); // updated for SmartFi (SFUSD) relaunch
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,85);
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,188);
         /* FIXME: Update these below.  */
