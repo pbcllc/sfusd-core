@@ -3,7 +3,7 @@ SmartUSD Core integration/staging tree
 
 [![Build Status](https://travis-ci.org/pbcllc/smartusd-core.svg?branch=master)](https://travis-ci.org/pbcllc/smartusd-core)
 
-https://smartusd.com
+https://powerblockcoin.com/
 
 Official Blockexplorer: https://explorer.pbc.kmd.sh/
 
