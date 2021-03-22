@@ -1,6 +1,6 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2017 The Bitcoin Core developers
-// Copyright (c) 2020 The Powerblockcoin Core developers
+// Copyright (c) 2020 The SmartUSD Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -161,9 +161,9 @@ UniValue validateaddress(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
             "validateaddress \"address\"\n"
-            "\nReturn information about the given powerblockcoin address.\n"
+            "\nReturn information about the given smartusd address.\n"
             "\nArguments:\n"
-            "1. \"address\"     (string, required) The powerblockcoin address to validate\n"
+            "1. \"address\"     (string, required) The smartusd address to validate\n"
             "\nResult:\n"
             "{\n"
             "  \"isvalid\" : true|false,       (boolean) If the address is valid or not. If not, this is the only property returned.\n"
@@ -324,7 +324,7 @@ UniValue verifymessage(const JSONRPCRequest& request)
             "verifymessage \"address\" \"signature\" \"message\"\n"
             "\nVerify a signed message\n"
             "\nArguments:\n"
-            "1. \"address\"         (string, required) The powerblockcoin address to use for the signature.\n"
+            "1. \"address\"         (string, required) The smartusd address to use for the signature.\n"
             "2. \"signature\"       (string, required) The signature provided by the signer in base 64 encoding (see signmessage).\n"
             "3. \"message\"         (string, required) The message that was signed.\n"
             "\nResult:\n"
@@ -776,7 +776,7 @@ UniValue getaddressbalance(const JSONRPCRequest& request)
 
 }
 
-UniValue powerblockcoin_snapshot(int top);
+UniValue smartusd_snapshot(int top);
 
 UniValue getsnapshot(const JSONRPCRequest& request)
 {
@@ -824,7 +824,7 @@ UniValue getsnapshot(const JSONRPCRequest& request)
 			    + HelpExampleRpc("getsnapshot", "1000")
                             );
     }
-    result = powerblockcoin_snapshot(top);
+    result = smartusd_snapshot(top);
     if ( result.size() > 0 ) {
         result.push_back(Pair("end_time", (int) time(NULL)));
     } else {

@@ -779,15 +779,15 @@ int64_t TotalPubkeyCCInputs(const CTransaction &tx, const CPubKey &pubkey, Eval 
 
 bool ProcessCC(struct CCcontract_info *cp, Eval* eval, std::vector<uint8_t> paramsNull, const CTransaction &ctx, unsigned int nIn)
 {
-    //height = POWERBLOCKCOIN_CONNECTING;
-    //if ( POWERBLOCKCOIN_CONNECTING < 0 ) // always comes back with > 0 for final confirmation
+    //height = SMARTUSD_CONNECTING;
+    //if ( SMARTUSD_CONNECTING < 0 ) // always comes back with > 0 for final confirmation
     //    return(true);
     //if ( ASSETCHAINS_CC == 0 || (height & ~(1<<30)) < Params().GetConsensus().nCCActivationHeight )
 
     int32_t height = chainActive.LastTip() ? chainActive.LastTip()->GetHeight() : 0;
     if (ASSETCHAINS_CC == 0 || height < Params().GetConsensus().nCCActivationHeight )
         return eval->Invalid("CC are disabled or not active yet");
-    /*if ( (POWERBLOCKCOIN_CONNECTING & (1<<30)) != 0 )
+    /*if ( (SMARTUSD_CONNECTING & (1<<30)) != 0 )
     {
         from_mempool = 1;
         height &= ((1<<30) - 1);
@@ -795,7 +795,7 @@ bool ProcessCC(struct CCcontract_info *cp, Eval* eval, std::vector<uint8_t> para
     if (cp->validate == NULL)
         return eval->Invalid("validation not supported for eval code");
 
-    //LogPrintf("POWERBLOCKCOIN_CONNECTING.%d mempool.%d vs CCactive.%d\n",height,from_mempool,CCActivationHeight);
+    //LogPrintf("SMARTUSD_CONNECTING.%d mempool.%d vs CCactive.%d\n",height,from_mempool,CCActivationHeight);
     // there is a chance CC tx is valid in mempool, but invalid when in block, so we cant filter duplicate requests. if any of the vins are spent, for example
     //txid = ctx.GetHash();
     //if ( txid == cp->prevtxid )
@@ -826,14 +826,14 @@ bool CClib_Dispatch(const CC *cond,Eval *eval,std::vector<uint8_t> paramsNull,co
     }
     int32_t height = chainActive.LastTip() ? chainActive.LastTip()->GetHeight() : 0;
 
-    /*height = POWERBLOCKCOIN_CONNECTING;
-    if ( POWERBLOCKCOIN_CONNECTING < 0 ) // always comes back with > 0 for final confirmation
+    /*height = SMARTUSD_CONNECTING;
+    if ( SMARTUSD_CONNECTING < 0 ) // always comes back with > 0 for final confirmation
         return(true); */
     // if ( ASSETCHAINS_CC == 0 || (height & ~(1<<30)) < Params().GetConsensus().nCCActivationHeight )
 
     if (ASSETCHAINS_CC == 0 || height < Params().GetConsensus().nCCActivationHeight)
         return eval->Invalid("CC are disabled or not active yet");
-    /*if ( (POWERBLOCKCOIN_CONNECTING & (1<<30)) != 0 )
+    /*if ( (SMARTUSD_CONNECTING & (1<<30)) != 0 )
     {
         from_mempool = 1;
         height &= ((1<<30) - 1);

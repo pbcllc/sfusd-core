@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2017 The Bitcoin Core developers
-// Copyright (c) 2020 The Powerblockcoin Core developers
+// Copyright (c) 2020 The SmartUSD Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -26,7 +26,7 @@ class ConsensusRules
 public:
 
     /* Return minimum locked amount in a name.  */
-    virtual CAmount MinPowerBlockCoinAmount(unsigned nHeight) const = 0;
+    virtual CAmount MinSmartUSDAmount(unsigned nHeight) const = 0;
 
 };
 
@@ -34,7 +34,7 @@ class MainNetConsensus : public ConsensusRules
 {
 public:
 
-    CAmount MinPowerBlockCoinAmount(unsigned nHeight) const
+    CAmount MinSmartUSDAmount(unsigned nHeight) const
     {
         if (nHeight < 212500)
             return 0;
@@ -48,7 +48,7 @@ class TestNetConsensus : public MainNetConsensus
 {
 public:
 
-    CAmount MinPowerBlockCoinAmount(unsigned) const
+    CAmount MinSmartUSDAmount(unsigned) const
     {
         return COIN / 100;
     }

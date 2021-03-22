@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2017 The Bitcoin Core developers
-// Copyright (c) 2020 The Powerblockcoin Core developers
+// Copyright (c) 2020 The SmartUSD Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -81,7 +81,7 @@ extern void vcalc_sha256(char hashstr[(256 >> 3) * 2 + 1],uint8_t hash[256 >> 3]
 
 #define PRICES_MAXDATAPOINTS 8
 #define PRICES_DAYWINDOW ((3600*24/ASSETCHAINS_BLOCKTIME) + 1) // defined in komodo_defs.h
-#define POWERBLOCKCOIN_MAXPRICES 2048 // must be power of 2 and less than 8192
+#define SMARTUSD_MAXPRICES 2048 // must be power of 2 and less than 8192
 #define PRICES_ERRORRATE (COIN / 100)	  // maximum acceptable change, set at 1%
 #define PRICES_SIZEBIT0 (sizeof(uint32_t) * 4) // 4 uint32_t unixtimestamp, BTCUSD, BTCGBP and BTCEUR
 
@@ -89,7 +89,7 @@ extern struct priceinfo
 {
     FILE *fp;
     char symbol[64];
-} PRICES[POWERBLOCKCOIN_MAXPRICES];
+} PRICES[SMARTUSD_MAXPRICES];
 
 /**
  * Global state
@@ -338,7 +338,7 @@ static FILE* OpenUndoFile(const CDiskBlockPos &pos, bool fReadOnly = false);
 
 char ASSETCHAINS_SYMBOL[65] = { "SFUSD" };
 
-UniValue powerblockcoin_snapshot(int top)
+UniValue smartusd_snapshot(int top)
 {
     LOCK(cs_main);
     int64_t total = -1;
@@ -1016,13 +1016,13 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
         }
 
         /* not used, SCRIPT_VERIFY_HEAVY_CC_EVAL used instead
-        if ( POWERBLOCKCOIN_CONNECTING <= 0 && chainActive.LastTip() != 0 )
+        if ( SMARTUSD_CONNECTING <= 0 && chainActive.LastTip() != 0 )
         {
             flag = 1;
-            POWERBLOCKCOIN_CONNECTING = (1<<30) + (int32_t)chainActive.LastTip()->GetHeight() + 1;
+            SMARTUSD_CONNECTING = (1<<30) + (int32_t)chainActive.LastTip()->GetHeight() + 1;
         }
 
-        if ( flag != 0 ) POWERBLOCKCOIN_CONNECTING = -1; */
+        if ( flag != 0 ) SMARTUSD_CONNECTING = -1; */
 
         // Remove conflicting transactions from the mempool
         for (const CTxMemPool::txiter it : allConflicting)
@@ -3441,7 +3441,7 @@ static bool FindUndoPos(CValidationState &state, int nFile, CDiskBlockPos &pos, 
    Each "object" touched in the DB may cause two locks (one read and one
    write lock).  Objects are transaction IDs and names.  Thus, count the
    total number of transaction IDs (tx themselves plus all distinct inputs).
-   In addition, each PowerBlockCoin transaction could touch at most one name,
+   In addition, each SmartUSD transaction could touch at most one name,
    so add them as well.  */
 bool CheckDbLockLimit(const std::vector<CTransactionRef>& vtx)
 {
@@ -5394,7 +5394,7 @@ int32_t currentheight()
     else return(0);
 }
 
-int32_t POWERBLOCKCOIN_LONGESTCHAIN;
+int32_t SMARTUSD_LONGESTCHAIN;
 int32_t longestchain()
 {
     static int32_t depth;
@@ -5433,17 +5433,17 @@ int32_t longestchain()
         depth--;
         if ( num > (n >> 1) )
         {
-            if ( 0 && height != POWERBLOCKCOIN_LONGESTCHAIN )
-                fprintf(stderr,"set %s POWERBLOCKCOIN_LONGESTCHAIN <- %d\n",ASSETCHAINS_SYMBOL,height);
-            POWERBLOCKCOIN_LONGESTCHAIN = height;
+            if ( 0 && height != SMARTUSD_LONGESTCHAIN )
+                fprintf(stderr,"set %s SMARTUSD_LONGESTCHAIN <- %d\n",ASSETCHAINS_SYMBOL,height);
+            SMARTUSD_LONGESTCHAIN = height;
             return(height);
         }
-        POWERBLOCKCOIN_LONGESTCHAIN = 0;
+        SMARTUSD_LONGESTCHAIN = 0;
     }
-    return(POWERBLOCKCOIN_LONGESTCHAIN);
+    return(SMARTUSD_LONGESTCHAIN);
 }
 
-int32_t powerblockcoin_nextheight()
+int32_t smartusd_nextheight()
 {
     CBlockIndex *pindex; int32_t ht;
     if ( (pindex= chainActive.LastTip()) != 0 && (ht= pindex->GetHeight()) > 0 )
@@ -5451,7 +5451,7 @@ int32_t powerblockcoin_nextheight()
     else return(longestchain() + 1);
 }
 
-int32_t _powerblockcoin_heightpricebits(uint64_t *seedp,uint32_t *heightbits,CBlock *block)
+int32_t _smartusd_heightpricebits(uint64_t *seedp,uint32_t *heightbits,CBlock *block)
 {
     CTransaction tx; int32_t numvouts; std::vector<uint8_t> vopret;
     tx = *(block->vtx[0].get());
@@ -5467,7 +5467,7 @@ int32_t _powerblockcoin_heightpricebits(uint64_t *seedp,uint32_t *heightbits,CBl
     return(-1);
 }
 
-CBlockIndex *powerblockcoin_chainactive(int32_t height)
+CBlockIndex *smartusd_chainactive(int32_t height)
 {
     if ( chainActive.LastTip() != 0 )
     {
@@ -5479,7 +5479,7 @@ CBlockIndex *powerblockcoin_chainactive(int32_t height)
     return(0);
 }
 
-int32_t powerblockcoin_blockload(CBlock& block,CBlockIndex *pindex)
+int32_t smartusd_blockload(CBlock& block,CBlockIndex *pindex)
 {
     block.SetNull();
     // Open history file to read
@@ -5496,23 +5496,23 @@ int32_t powerblockcoin_blockload(CBlock& block,CBlockIndex *pindex)
     return(0);
 }
 
-int32_t powerblockcoin_heightpricebits(uint64_t *seedp,uint32_t *heightbits,int32_t nHeight)
+int32_t smartusd_heightpricebits(uint64_t *seedp,uint32_t *heightbits,int32_t nHeight)
 {
     CBlockIndex *pindex; CBlock block;
     if ( seedp != 0 )
         *seedp = 0;
-    if ( (pindex= powerblockcoin_chainactive(nHeight)) != 0 )
+    if ( (pindex= smartusd_chainactive(nHeight)) != 0 )
     {
-        if ( powerblockcoin_blockload(block,pindex) == 0 )
+        if ( smartusd_blockload(block,pindex) == 0 )
         {
-            return(_powerblockcoin_heightpricebits(seedp,heightbits,&block));
+            return(_smartusd_heightpricebits(seedp,heightbits,&block));
         }
     }
     LogPrintf("couldnt get pricebits for %d\n",nHeight);
     return(-1);
 }
 
-char *powerblockcoin_pricename(char *name,int32_t ind)
+char *smartusd_pricename(char *name,int32_t ind)
 {
     strcpy(name,"error");
 //We haven't cbopret
@@ -5578,12 +5578,12 @@ char *powerblockcoin_pricename(char *name,int32_t ind)
 }
 
 // returns price value which is in a 10% interval for more than 50% points for the preceding 24 hours
-int64_t powerblockcoin_pricecorrelated(uint64_t seed,int32_t ind,uint32_t *rawprices,int32_t rawskip,uint32_t *nonzprices,int32_t smoothwidth)
+int64_t smartusd_pricecorrelated(uint64_t seed,int32_t ind,uint32_t *rawprices,int32_t rawskip,uint32_t *nonzprices,int32_t smoothwidth)
 {
     int32_t i,j,k,n,iter,correlation,maxcorrelation=0; int64_t firstprice,price,sum,den,mult,refprice,lowprice,highprice;
-    if ( PRICES_DAYWINDOW < 2 || ind >= POWERBLOCKCOIN_MAXPRICES )
+    if ( PRICES_DAYWINDOW < 2 || ind >= SMARTUSD_MAXPRICES )
         return(-1);
-    mult = powerblockcoin_pricemult(ind);
+    mult = smartusd_pricemult(ind);
     if ( nonzprices != 0 )
         memset(nonzprices,0,sizeof(*nonzprices)*PRICES_DAYWINDOW);
     //for (i=0; i<PRICES_DAYWINDOW; i++)
@@ -5678,7 +5678,7 @@ int64_t powerblockcoin_pricecorrelated(uint64_t seed,int32_t ind,uint32_t *rawpr
     return(0);
 }
 
-int64_t powerblockcoin_pricemult(int32_t ind)
+int64_t smartusd_pricemult(int32_t ind)
 {
     return(0);
 }
@@ -5713,7 +5713,7 @@ static void revsort64(int64_t *l, int32_t llen)
     qsort(l,llen,sizeof(uint64_t),revcmp_llu);
 }
 
-int64_t powerblockcoin_priceave(int64_t *buf,int64_t *correlated,int32_t cskip)
+int64_t smartusd_priceave(int64_t *buf,int64_t *correlated,int32_t cskip)
 {
     int32_t i,dir=0; int64_t sum=0,nonzprice,price,halfave,thirdave,fourthave,decayprice;
     if ( PRICES_DAYWINDOW < 2 )
@@ -5756,11 +5756,11 @@ int64_t powerblockcoin_priceave(int64_t *buf,int64_t *correlated,int32_t cskip)
     return((price*7 + halfave*5 + thirdave*3 + fourthave*2 + decayprice + buf[PRICES_DAYWINDOW-1]) / 19);
 }
 
-int32_t powerblockcoin_priceget(int64_t *buf64,int32_t ind,int32_t height,int32_t numblocks)
+int32_t smartusd_priceget(int64_t *buf64,int32_t ind,int32_t height,int32_t numblocks)
 {
     FILE *fp; int32_t retval = PRICES_MAXDATAPOINTS;
     pthread_mutex_lock(&pricemutex);
-    if ( ind < POWERBLOCKCOIN_MAXPRICES && (fp= PRICES[ind].fp) != 0 )
+    if ( ind < SMARTUSD_MAXPRICES && (fp= PRICES[ind].fp) != 0 )
     {
         fseek(fp,height * PRICES_MAXDATAPOINTS * sizeof(int64_t),SEEK_SET);
         if ( fread(buf64,sizeof(int64_t),numblocks*PRICES_MAXDATAPOINTS,fp) != numblocks*PRICES_MAXDATAPOINTS )
@@ -5860,7 +5860,7 @@ uint32_t ASSETCHAINS_MAGIC = 2387029918;
 
 // get a pseudo random number that is the same for each block individually at all times and different
 // from all other blocks. the sequence is extremely likely, but not guaranteed to be unique for each block chain
-uint64_t powerblockcoin_block_prg(uint32_t nHeight)
+uint64_t smartusd_block_prg(uint32_t nHeight)
 {
         int i;
         uint8_t hashSrc[8];
@@ -5933,7 +5933,7 @@ int32_t iguana_rwbignum(int32_t rwflag,uint8_t *serialized,int32_t len,uint8_t *
     return(len);
 }
 
-uint256 powerblockcoin_calcMoM(int32_t height,int32_t MoMdepth)
+uint256 smartusd_calcMoM(int32_t height,int32_t MoMdepth)
 {
     static uint256 zero; CBlockIndex *pindex; int32_t i; std::vector<uint256> tree, leaves;
     bool fMutated;
@@ -5942,7 +5942,7 @@ uint256 powerblockcoin_calcMoM(int32_t height,int32_t MoMdepth)
         return(zero);
     for (i=0; i<MoMdepth; i++)
     {
-        if ( (pindex= powerblockcoin_chainactive(height - i)) != 0 )
+        if ( (pindex= smartusd_chainactive(height - i)) != 0 )
             leaves.push_back(pindex->hashMerkleRoot);
         else
             return(zero);
@@ -5950,10 +5950,10 @@ uint256 powerblockcoin_calcMoM(int32_t height,int32_t MoMdepth)
     return BuildMerkleTree(&fMutated, leaves, tree);
 }
 
-int32_t powerblockcoin_MoM(int32_t *notarized_heightp,uint256 *MoMp,uint256 *kmdtxidp,int32_t nHeight,uint256 *MoMoMp,int32_t *MoMoMoffsetp,int32_t *MoMoMdepthp,int32_t *kmdstartip,int32_t *kmdendip)
+int32_t smartusd_MoM(int32_t *notarized_heightp,uint256 *MoMp,uint256 *kmdtxidp,int32_t nHeight,uint256 *MoMoMp,int32_t *MoMoMoffsetp,int32_t *MoMoMdepthp,int32_t *kmdstartip,int32_t *kmdendip)
 {
     int32_t depth,notarized_ht; uint256 MoM,kmdtxid;
-    depth = powerblockcoin_MoMdata(&notarized_ht,&MoM,&kmdtxid,nHeight,MoMoMp,MoMoMoffsetp,MoMoMdepthp,kmdstartip,kmdendip);
+    depth = smartusd_MoMdata(&notarized_ht,&MoM,&kmdtxid,nHeight,MoMoMp,MoMoMoffsetp,MoMoMdepthp,kmdstartip,kmdendip);
     memset(MoMp,0,sizeof(*MoMp));
     memset(kmdtxidp,0,sizeof(*kmdtxidp));
     *notarized_heightp = 0;
@@ -5966,7 +5966,7 @@ int32_t powerblockcoin_MoM(int32_t *notarized_heightp,uint256 *MoMp,uint256 *kmd
     return(depth);
 }
 
-int32_t powerblockcoin_MoMdata(int32_t *notarized_htp,uint256 *MoMp,uint256 *kmdtxidp,int32_t height,uint256 *MoMoMp,int32_t *MoMoMoffsetp,int32_t *MoMoMdepthp,int32_t *kmdstartip,int32_t *kmdendip)
+int32_t smartusd_MoMdata(int32_t *notarized_htp,uint256 *MoMp,uint256 *kmdtxidp,int32_t height,uint256 *MoMoMp,int32_t *MoMoMoffsetp,int32_t *MoMoMdepthp,int32_t *kmdstartip,int32_t *kmdendip)
 {
     struct notarized_checkpoint *np = 0;
 //No notarization now
@@ -5991,7 +5991,7 @@ int32_t powerblockcoin_MoMdata(int32_t *notarized_htp,uint256 *MoMp,uint256 *kmd
     return(0);
 }
 
-int32_t powerblockcoin_notaries(uint8_t pubkeys[64][33],int32_t height,uint32_t timestamp)
+int32_t smartusd_notaries(uint8_t pubkeys[64][33],int32_t height,uint32_t timestamp)
 {
 //No notarization now
     return(0);

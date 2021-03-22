@@ -100,7 +100,7 @@ What is needed is for the dealer node to track the entropy tx that was already b
 
 #define MAX_ENTROPYUSED 8192
 #define DICE_MINUTXOS 15000
-extern int32_t POWERBLOCKCOIN_INSYNC;
+extern int32_t SMARTUSD_INSYNC;
 
 pthread_mutex_t DICE_MUTEX,DICEREVEALED_MUTEX;
 
@@ -331,7 +331,7 @@ void *dicefinish(void *_ptr)
     dicepk = GetUnspendable(cp,0);
     GetCCaddress(cp,CCaddr,GetUnspendable(cp,0));
     LogPrintf("start dicefinish thread %s CCaddr.%s\n",coinaddr,CCaddr);
-    if ( (newht= POWERBLOCKCOIN_INSYNC) == 0 )
+    if ( (newht= SMARTUSD_INSYNC) == 0 )
     {
 #ifdef WIN32
         boost::this_thread::sleep(boost::posix_time::milliseconds(7000));
@@ -501,7 +501,7 @@ void *dicefinish(void *_ptr)
                 free(utxos);
             }
         }
-        if ( (newht= POWERBLOCKCOIN_INSYNC) == 0 || newht == lastheight )
+        if ( (newht= SMARTUSD_INSYNC) == 0 || newht == lastheight )
         {
 #ifdef WIN32
            boost::this_thread::sleep(boost::posix_time::milliseconds(3000));
@@ -962,7 +962,7 @@ bool DiceValidate(struct CCcontract_info *cp,Eval *eval,const CTransaction &tx, 
                     {
                         // will only happen for fundingPubKey
 //We haven't dealer node
-//                        if ( POWERBLOCKCOIN_INSYNC != 0 && KOMODO_DEALERNODE != 0 )
+//                        if ( SMARTUSD_INSYNC != 0 && KOMODO_DEALERNODE != 0 )
 //                            DiceQueue(iswin,sbits,fundingtxid,txid,tx,entropyvout);
                     }
                     else
@@ -1695,7 +1695,7 @@ void *dealer0_loop(void *_arg)
     entropytxs = (CTransaction *)calloc(sizeof(*entropytxs),DICE_MINUTXOS);
     while ( 1 )
     {
-        while ( POWERBLOCKCOIN_INSYNC == 0 || (height= POWERBLOCKCOIN_INSYNC) == lastht )
+        while ( SMARTUSD_INSYNC == 0 || (height= SMARTUSD_INSYNC) == lastht )
         {
 #ifdef WIN32
            boost::this_thread::sleep(boost::posix_time::milliseconds(3000));

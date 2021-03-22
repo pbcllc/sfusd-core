@@ -1,12 +1,12 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2017 The Bitcoin Core developers
-// Copyright (c) 2020 The Powerblockcoin Core developers
+// Copyright (c) 2020 The SmartUSD Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <string>
 #include <map>
-#include "powerblockcoin_curve25519.h"
+#include "smartusd_curve25519.h"
 #include "script/script.h"
 #include "wallet/wallet.h"
 
@@ -22,15 +22,15 @@ uint16_t ASSETCHAINS_CODAPORT,ASSETCHAINS_BEAMPORT;
 uint8_t ASSETCHAINS_OVERRIDE_PUBKEY33[33];
 uint64_t ASSETCHAINS_PEGSCCPARAMS[3];
 uint8_t ASSETCHAINS_MARMARA;
-CScript POWERBLOCKCOIN_EARLYTXID_SCRIPTPUB;
+CScript SMARTUSD_EARLYTXID_SCRIPTPUB;
 //int32_t CCActivationHeight = Params().GetConsensus().nCCActivationHeight;
-//int32_t POWERBLOCKCOIN_CONNECTING = -1;
+//int32_t SMARTUSD_CONNECTING = -1;
 int32_t ASSETCHAINS_BLOCKTIME = 60;
 uint64_t ASSETCHAINS_CBOPRET=0;
 uint8_t NOTARY_PUBKEY33[33];
-uint256 POWERBLOCKCOIN_EARLYTXID;
+uint256 SMARTUSD_EARLYTXID;
 pthread_mutex_t KOMODO_CC_mutex;
-int32_t POWERBLOCKCOIN_INSYNC;
+int32_t SMARTUSD_INSYNC;
 int32_t lastSnapShotHeight;
 pthread_mutex_t staked_mutex;
 
@@ -38,13 +38,13 @@ pthread_mutex_t staked_mutex;
 CWallet* pwalletMain = NULL;
 #endif
 
-#define POWERBLOCKCOIN_MAXPRICES 2048 // must be power of 2 and less than 8192
+#define SMARTUSD_MAXPRICES 2048 // must be power of 2 and less than 8192
 
 struct priceinfo
 {
     FILE *fp;
     char symbol[64];
-} PRICES[POWERBLOCKCOIN_MAXPRICES];
+} PRICES[SMARTUSD_MAXPRICES];
 
 extern char *bitcoin_base58encode(char *coinaddr,uint8_t *data,int32_t datalen);
 

@@ -60,9 +60,9 @@ QString BitcoinUnits::description(int unit)
 {
     switch(unit)
     {
-    case BTC: return QString("Powerblockcoins");
-    case mBTC: return QString("Milli-Powerblockcoins (1 / 1" THIN_SP_UTF8 "000)");
-    case uBTC: return QString("Micro-Powerblockcoins (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
+    case BTC: return QString("SmartUSDs");
+    case mBTC: return QString("Milli-SmartUSDs (1 / 1" THIN_SP_UTF8 "000)");
+    case uBTC: return QString("Micro-SmartUSDs (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
     default: return QString("???");
     }
 }

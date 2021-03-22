@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2017 The Bitcoin Core developers
-// Copyright (c) 2020 The Powerblockcoin Core developers
+// Copyright (c) 2020 The SmartUSD Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -80,7 +80,7 @@ bool AppInit(int argc, char* argv[])
         else
         {
             strUsage += "\n" + _("Usage:") + "\n" +
-                  "  powerblockcoind [options]                     " + strprintf(_("Start %s Daemon"), _(PACKAGE_NAME)) + "\n";
+                  "  smartusdd [options]                     " + strprintf(_("Start %s Daemon"), _(PACKAGE_NAME)) + "\n";
 
             strUsage += "\n" + HelpMessage(HMM_BITCOIND);
         }
@@ -114,7 +114,7 @@ bool AppInit(int argc, char* argv[])
         // Error out when loose non-argument tokens are encountered on command line
         for (int i = 1; i < argc; i++) {
             if (!IsSwitchChar(argv[i][0])) {
-                fprintf(stderr, "Error: Command line contains unexpected token '%s', see powerblockcoind -h for a list of options.\n", argv[i]);
+                fprintf(stderr, "Error: Command line contains unexpected token '%s', see smartusdd -h for a list of options.\n", argv[i]);
                 return false;
             }
         }
@@ -142,7 +142,7 @@ bool AppInit(int argc, char* argv[])
         if (gArgs.GetBoolArg("-daemon", false))
         {
 #if HAVE_DECL_DAEMON
-            fprintf(stdout, "PowerBlockCoin server starting\n");
+            fprintf(stdout, "SmartUSD server starting\n");
 
             // Daemonize
             if (daemon(1, 0)) { // don't chdir (1), do close FDs (0)

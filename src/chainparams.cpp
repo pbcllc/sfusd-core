@@ -1,6 +1,6 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2017 The Bitcoin Core developers
-// Copyright (c) 2020 The Powerblockcoin Core developers
+// Copyright (c) 2020 The SmartUSD Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -69,7 +69,7 @@ static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits
 }
 
 /**
- * Build genesis block for testnet.  In PowerBlockCoin, it has a changed timestamp
+ * Build genesis block for testnet.  In SmartUSD, it has a changed timestamp
  * and output script (it uses Bitcoin's).
  */
 static CBlock CreateTestnetGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
@@ -134,7 +134,7 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 0; // Not yet enabled
 
         // The best chain should have at least this much work.
-        // The value is the chain work of the PowerBlockCoin mainnet chain at height
+        // The value is the chain work of the SmartUSD mainnet chain at height
         // 0, with best block hash:
         // 00000000a9eab671c3f2753a9d21e449b3c12a1fd62b3a9c388e580617e5a363
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000000010000100");
@@ -284,7 +284,7 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 0; // Not yet enabled
 
         // The best chain should have at least this much work.
-        // The value is the chain work of the PowerBlockCoin testnet chain at height
+        // The value is the chain work of the SmartUSD testnet chain at height
         // 158,460, with best block hash:
         // cebebb916288ed48cd8a359576d900c550203883bf69fc8d5ed92c5d778a1e32
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000000010000100");
@@ -341,7 +341,7 @@ public:
         vFixedSeeds.clear();
         vSeeds.clear();
         // nodes with support for servicebits filtering should be at the top
-        vSeeds.emplace_back("seed.test.powerblockcoin.org");
+        vSeeds.emplace_back("seed.test.smartusd.org");
 
         // https://en.bitcoin.it/wiki/List_of_address_prefixes
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,60);

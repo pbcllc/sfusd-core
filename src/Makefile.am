@@ -1,5 +1,5 @@
 # Copyright (c) 2013-2016 The Bitcoin Core developers
-# Copyright (c) 2020 The Powerblockcoin Core developers
+# Copyright (c) 2020 The SmartUSD Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -42,7 +42,7 @@ if ENABLE_ZMQ
 LIBBITCOIN_ZMQ=libbitcoin_zmq.a
 endif
 if BUILD_BITCOIN_LIBS
-LIBBITCOINCONSENSUS=libpowerblockcoinconsensus.la
+LIBBITCOINCONSENSUS=libsmartusdconsensus.la
 endif
 if ENABLE_WALLET
 LIBBITCOIN_WALLET=libbitcoin_wallet.a
@@ -74,11 +74,11 @@ TESTS =
 BENCHMARKS =
 
 if BUILD_BITCOIND
-  bin_PROGRAMS += powerblockcoind
+  bin_PROGRAMS += smartusdd
 endif
 
 if BUILD_BITCOIN_UTILS
-  bin_PROGRAMS += powerblockcoin-cli powerblockcoin-tx
+  bin_PROGRAMS += smartusd-cli smartusd-tx
 endif
 
 .PHONY: FORCE check-symbols check-security
@@ -275,10 +275,10 @@ libbitcoin_server_a_SOURCES = \
   validationinterface.cpp \
   versionbits.cpp \
   cc/cclib.cpp \
-  powerblockcoin.cpp \
+  smartusd.cpp \
   mini-gmp.cpp \
   mini-gmp.h \
-  powerblockcoin_cJSON.cpp \
+  smartusd_cJSON.cpp \
   core_read.cpp \
   $(BITCOIN_CORE_H)
 
@@ -363,7 +363,7 @@ libbitcoin_consensus_a_SOURCES = \
   primitives/transaction.h \
   pubkey.cpp \
   pubkey.h \
-  script/powerblockcoinconsensus.cpp \
+  script/smartusdconsensus.cpp \
   script/cc.cpp \
   script/interpreter.cpp \
   script/interpreter.h \
@@ -380,7 +380,7 @@ libbitcoin_consensus_a_SOURCES = \
   utilstrencodings.h \
   utiltime.cpp \
   version.h \
-  powerblockcoin.cpp \
+  smartusd.cpp \
   mini-gmp.cpp \
   mini-gmp.h \
   random.cpp \
@@ -455,16 +455,16 @@ nodist_libbitcoin_util_a_SOURCES = $(srcdir)/obj/build.h
 #
 
 # bitcoind binary #
-powerblockcoind_SOURCES = bitcoind.cpp
-powerblockcoind_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-powerblockcoind_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-powerblockcoind_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+smartusdd_SOURCES = bitcoind.cpp
+smartusdd_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+smartusdd_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+smartusdd_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-powerblockcoind_SOURCES += bitcoind-res.rc
+smartusdd_SOURCES += bitcoind-res.rc
 endif
 
-powerblockcoind_LDADD = \
+smartusdd_LDADD = \
   $(LIBBITCOIN_SERVER) \
   $(LIBBITCOIN_COMMON) \
   $(LIBUNIVALUE) \
@@ -479,38 +479,38 @@ powerblockcoind_LDADD = \
   $(LIBSECP256K1) \
   $(LIBCRYPTOCONDITIONS)
 
-powerblockcoind_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS)
+smartusdd_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS)
 
 # bitcoin-cli binary #
-powerblockcoin_cli_SOURCES = bitcoin-cli.cpp
-powerblockcoin_cli_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(EVENT_CFLAGS)
-powerblockcoin_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-powerblockcoin_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+smartusd_cli_SOURCES = bitcoin-cli.cpp
+smartusd_cli_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(EVENT_CFLAGS)
+smartusd_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+smartusd_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-powerblockcoin_cli_SOURCES += bitcoin-cli-res.rc
+smartusd_cli_SOURCES += bitcoin-cli-res.rc
 endif
 
-powerblockcoin_cli_LDADD = \
+smartusd_cli_LDADD = \
   $(LIBBITCOIN_CLI) \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_UTIL) \
   $(LIBBITCOIN_CRYPTO)
 
-powerblockcoin_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
+smartusd_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
 #
 
 # bitcoin-tx binary #
-powerblockcoin_tx_SOURCES = bitcoin-tx.cpp
-powerblockcoin_tx_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-powerblockcoin_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-powerblockcoin_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+smartusd_tx_SOURCES = bitcoin-tx.cpp
+smartusd_tx_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+smartusd_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+smartusd_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-powerblockcoin_tx_SOURCES += bitcoin-tx-res.rc
+smartusd_tx_SOURCES += bitcoin-tx-res.rc
 endif
 
-powerblockcoin_tx_LDADD = \
+smartusd_tx_LDADD = \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_COMMON) \
   $(LIBBITCOIN_UTIL) \
@@ -519,22 +519,22 @@ powerblockcoin_tx_LDADD = \
   $(LIBSECP256K1) \
   $(LIBCRYPTOCONDITIONS)
 
-powerblockcoin_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
+smartusd_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
 #
 
-# powerblockcoinconsensus library #
+# smartusdconsensus library #
 if BUILD_BITCOIN_LIBS
-include_HEADERS = script/powerblockcoinconsensus.h
-libpowerblockcoinconsensus_la_SOURCES = $(crypto_libbitcoin_crypto_a_SOURCES) $(libbitcoin_consensus_a_SOURCES)
+include_HEADERS = script/smartusdconsensus.h
+libsmartusdconsensus_la_SOURCES = $(crypto_libbitcoin_crypto_a_SOURCES) $(libbitcoin_consensus_a_SOURCES)
 
 if GLIBC_BACK_COMPAT
-  libpowerblockcoinconsensus_la_SOURCES += compat/glibc_compat.cpp
+  libsmartusdconsensus_la_SOURCES += compat/glibc_compat.cpp
 endif
 
-libpowerblockcoinconsensus_la_LDFLAGS = $(AM_LDFLAGS) -no-undefined $(RELDFLAGS) $(LIBTOOL_APP_LDFLAGS)
-libpowerblockcoinconsensus_la_LIBADD = $(LIBSECP256K1) $(LIBCRYPTOCONDITIONS) $(SSL_LIBS) $(BOOST_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(CRYPTO_LIBS)
-libpowerblockcoinconsensus_la_CPPFLAGS = $(AM_CPPFLAGS) -I$(builddir)/obj -I$(srcdir)/secp256k1/include -I$(srcdir)/cryptoconditions/include -DBUILD_BITCOIN_INTERNAL $(BITCOIN_INCLUDES) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS) $(CRYPTO_CFLAGS) $(BOOST_CPPFLAGS) $(SSL_CFLAGS)
-libpowerblockcoinconsensus_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libsmartusdconsensus_la_LDFLAGS = $(AM_LDFLAGS) -no-undefined $(RELDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+libsmartusdconsensus_la_LIBADD = $(LIBSECP256K1) $(LIBCRYPTOCONDITIONS) $(SSL_LIBS) $(BOOST_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(CRYPTO_LIBS)
+libsmartusdconsensus_la_CPPFLAGS = $(AM_CPPFLAGS) -I$(builddir)/obj -I$(srcdir)/secp256k1/include -I$(srcdir)/cryptoconditions/include -DBUILD_BITCOIN_INTERNAL $(BITCOIN_INCLUDES) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS) $(CRYPTO_CFLAGS) $(BOOST_CPPFLAGS) $(SSL_CFLAGS)
+libsmartusdconsensus_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 
 endif
 #

@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2017 The Bitcoin Core developers
-// Copyright (c) 2020 The Powerblockcoin Core developers
+// Copyright (c) 2020 The SmartUSD Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -111,7 +111,7 @@ enum OutputType : int
     OUTPUT_TYPE_P2SH_SEGWIT,
     OUTPUT_TYPE_BECH32,
 
-    // FIXME: Update once we have segwit on PowerBlockCoin.
+    // FIXME: Update once we have segwit on SmartUSD.
     OUTPUT_TYPE_DEFAULT = OUTPUT_TYPE_LEGACY,
 };
 
