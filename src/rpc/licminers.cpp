@@ -10,7 +10,8 @@
 #include <utilstrencodings.h>
 #include <chainparams.h>
 #include <base58.h>
-
+#include <sync.h>
+#include <validation.h>
 
 UniValue letsdebug(const JSONRPCRequest& request)
 {
@@ -22,7 +23,21 @@ UniValue letsdebug(const JSONRPCRequest& request)
             + HelpExampleRpc("letsdebug", "")
         );
 
-    return NullUniValue;
+    UniValue ret(UniValue::VOBJ);
+    const CChainParams& m_params = Params();
+    int64_t nHeight = -1;
+
+    {
+        LOCK(cs_main);
+        CBlockIndex* const pindexPrev = chainActive.Tip();
+        nHeight = pindexPrev->nHeight+1;
+        ret.push_back(Pair("height", nHeight));
+    }
+
+    const std::set<CScript>& setAllowedMiners = m_params.GetAllowedLicensedMinersScriptsAtHeight(nHeight);
+    ret.push_back(Pair("total_scripts_allowed", setAllowedMiners.size()));
+
+    return ret;
 }
 
 UniValue convertaddress(const JSONRPCRequest& request)
