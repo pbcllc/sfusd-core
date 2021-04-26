@@ -93,6 +93,8 @@ public:
     const CCheckpointData& Checkpoints() const { return checkpointData; }
     const ChainTxData& TxData() const { return chainTxData; }
     void UpdateVersionBitsParameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout);
+    const std::set<CScript> GetAllowedLicensedMinersScriptsAtHeight(int64_t height) const;
+    uint64_t UseLicensedMinersAfterHeight() const { return nUseLicensedMinersAfterHeight; }
 
     /* Check whether the given tx is a "historic relic" for which to
        skip the validity check.  Return also the "type" of the bug,

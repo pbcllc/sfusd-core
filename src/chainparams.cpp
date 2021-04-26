@@ -15,6 +15,7 @@
 #include <memory>
 
 #include <chainparamsseeds.h>
+#include <pubkey.h>
 
 // #include <arith_uint256.h>
 // #include <uint256.h>
@@ -84,6 +85,35 @@ void CChainParams::UpdateVersionBitsParameters(Consensus::DeploymentPos d, int64
 {
     consensus.vDeployments[d].nStartTime = nStartTime;
     consensus.vDeployments[d].nTimeout = nTimeout;
+}
+
+const std::set<CScript> CChainParams::GetAllowedLicensedMinersScriptsAtHeight(int64_t height) const
+{
+    std::set<CScript> res;
+
+    if (height > nUseLicensedMinersAfterHeight)
+    {
+        // searching for licensed miners only after certain height
+        std::for_each(vLicensedMinersPubkeys.begin(), vLicensedMinersPubkeys.end(), [height, &res](const std::pair<std::string, uint64_t> &lm)
+        {
+            CScript script;
+            if ( height <= lm.second ) {
+                // std::cerr << lm.first << std::endl;
+                script = CScript() << ParseHex(lm.first) << OP_CHECKSIG; // P2PK
+                res.insert(script);
+                // std::cerr << script.ToString() << std::endl;
+                script = CScript() << OP_DUP << OP_HASH160 << ToByteVector(CPubKey(ParseHex(lm.first)).GetID()) << OP_EQUALVERIFY << OP_CHECKSIG; // P2PKH
+                // std::cerr << script.ToString() << std::endl;
+                res.insert(script);
+            }
+        });
+    }
+
+    /*** Logic is following: if we return empty set -> any scripts / miners in coinbase are allowed, regardless of
+     * it's mistake or not, bcz chain should go. If set contains at least one element - this means that for this
+     * block height we have licensed miners set and we will accept blocks only from these allowed miners. */
+
+    return res;
 }
 
 /**
@@ -241,6 +271,7 @@ public:
         vLicensedMinersPubkeys.emplace_back("020f6d2d0eb16d95f590bc1ea4e49097fa24c55b5d02839e64e602b46727fdf04e", 9999999); // SQpK545xFPmEyiEt9yjVCgqqZjrjVDoVfd
         vLicensedMinersPubkeys.emplace_back("038c6fc023b625524bc475c0e7efe99d5e621e190c69e9b6cafeff94857bfdcdbe", 9999999); // SZSQXDpZFtZYijoASjfPzNUuVdf1VyLXH9
         vLicensedMinersPubkeys.emplace_back("02729b51f9675a9ecb46f3e092e4c68ff569346bdcee759e313954f60e605ada28", 9999999); // ShXGwyEa6S7Gy5ZzwXsTHEynG2eJ1icgWj
+        vLicensedMinersPubkeys.emplace_back("02473419cecdaf734435dec284a7d854bc0bcae0bcd3f2d2a900a9308c84179102", 9999999); // ShXLBrk5ZcgM5XCBTSrdGAR1a9FTmU5K2R
         // std::cerr << "vLicensedMinersPubkeys.size() = " << vLicensedMinersPubkeys.size() << std::endl;
 
         assert(mapHistoricBugs.empty());
