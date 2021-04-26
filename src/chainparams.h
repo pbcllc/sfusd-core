@@ -119,6 +119,9 @@ protected:
     CCheckpointData checkpointData;
     ChainTxData chainTxData;
 
+    uint64_t nUseLicensedMinersAfterHeight; // after that height we will check every block, if it's created by licensed miner
+    std::vector< std::pair<std::string, uint64_t> > vLicensedMinersPubkeys; // vector of pairs pubkey <-> lastblockheight till which (included) miner pubkey is valid
+
     /* Map (block height, txid) pairs for buggy transactions onto their
        bug type value.  */
     std::map<std::pair<unsigned, uint256>, BugType> mapHistoricBugs;

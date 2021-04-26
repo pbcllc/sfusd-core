@@ -62,7 +62,7 @@ static CBlock CreateGenesisBlock(const CScript& genesisInputScript, const CScrip
  */
 static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
-    const char* pszTimestamp = "https://komodoplatform.com/ - Get Started with Komodo Today ...";
+    const char* pszTimestamp = "March 7th 2021 - SFUSD powered by cutting edge Crypto Conditions technology";
     const CScript genesisInputScript = CScript() << 0x1d00ffff << CScriptNum(4) << std::vector<unsigned char>((const unsigned char*)pszTimestamp, (const unsigned char*)pszTimestamp + strlen(pszTimestamp));
     const CScript genesisOutputScript = CScript() << ParseHex("041c72af63c74cec7a65a4c52cbb35d7ef0b302c7f5eecd9ba2be2148fe64b588e3b3d5add7f0ea14af2c2d8df66b593a17665989baa343485359eac454ecf777b") << OP_CHECKSIG;
     return CreateGenesisBlock(genesisInputScript, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward);
@@ -74,7 +74,7 @@ static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits
  */
 static CBlock CreateTestnetGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
-    const char* pszTimestamp = "15/Sep/2021 The future of CryptoCondintions is right here!";
+    const char* pszTimestamp = "March 7th 2021 - SFUSD powered by cutting edge Crypto Conditions technology";
     const CScript genesisInputScript = CScript() << 0x1d00ffff << CScriptNum(4) << std::vector<unsigned char>((const unsigned char*)pszTimestamp, (const unsigned char*)pszTimestamp + strlen(pszTimestamp));
     const CScript genesisOutputScript = CScript() << ParseHex("041c72af63c74cec7a65a4c52cbb35d7ef0b302c7f5eecd9ba2be2148fe64b588e3b3d5add7f0ea14af2c2d8df66b593a17665989baa343485359eac454ecf777b") << OP_CHECKSIG;
     return CreateGenesisBlock(genesisInputScript, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward);
@@ -106,7 +106,7 @@ public:
            after them.  They are too deep in the chain to be ever reorged,
            and thus this is also fine.  */
         // FIXME: Activate BIP16 with a softfork.
-        consensus.nCCActivationHeight = 128;
+        consensus.nCCActivationHeight = 9999999;
         consensus.BIP16Height = 10000000;
         consensus.BIP34Height = 128;
         consensus.BIP34Hash = uint256S("0x00000000128e723cb938fc76eb625f101797abac70f54c4b174e04d0c6128d26");
@@ -166,7 +166,7 @@ public:
             // Search for Genesis Block candidate
             uint32_t nPowLimitCompact = UintToArith256(consensus.powLimit).GetCompact();
             arith_uint256 hashTarget = arith_uint256().SetCompact(nPowLimitCompact);
-            uint32_t nNonce = 1688207360; uint32_t nTime = 1595448103;
+            uint32_t nNonce = 0xacd7571c; uint32_t nTime = 1615075200; // Sun Mar 07 2021 00:00:00 GMT+0000
 
             std::cerr << "Searching for Genesis block candidate ..." << std::endl;
             std::cerr << "Target: 0x" << hashTarget.ToString() << std::endl;
@@ -187,12 +187,13 @@ public:
             std::cerr << "genesis.nVersion = " << genesis.nVersion << std::endl;
             std::cerr << "genesis.hashMerkleRoot = 0x" << genesis.hashMerkleRoot.ToString() << std::endl;
             std::cerr << "genesis.GetHash = 0x" << genesis.GetHash().ToString() << std::endl;
-        } */
+        }
+        */
 
-        genesis = CreateGenesisBlock(1595448103, 0x64ace9c7, 0x1d00ffff, 1, 50 * COIN); // 07/22/2020 @ 8:01pm (UTC)
+        genesis = CreateGenesisBlock(1615075200, 0xacd7571c, 0x1d00ffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x00000000a9eab671c3f2753a9d21e449b3c12a1fd62b3a9c388e580617e5a363"));
-        assert(genesis.hashMerkleRoot == uint256S("0x684e583fc7780c5225fe4b968c29e536b005228e557c622a8d8940585401740b"));
+        assert(consensus.hashGenesisBlock == uint256S("0x00000000c36f0406d516605e0a2d2702085d565ec0c1283883002127dfcd52b7"));
+        assert(genesis.hashMerkleRoot == uint256S("0x7aec6215dcca9a09df51d0bab4cf9f43f52f0fbe680f26aeaa3dd45b188ef745"));
 
         // Note that of those which support the service bits prefix, most only support a subset of
         // possible options.
@@ -221,9 +222,9 @@ public:
 
         checkpointData = {
             {
-                {      1, uint256S("000000005af55a1a20939351be6c39587add71b511caa411110b8411fb4986fd")},
-                {    128, uint256S("00000000128e723cb938fc76eb625f101797abac70f54c4b174e04d0c6128d26")},
-                {  10101, uint256S("b8077f03c64cb8dee32aed80f351ddeb431c0f6c1d3abb6e1be82ef5b148fa4f")},
+                // {      1, uint256S("000000005af55a1a20939351be6c39587add71b511caa411110b8411fb4986fd")},
+                // {    128, uint256S("00000000128e723cb938fc76eb625f101797abac70f54c4b174e04d0c6128d26")},
+                // {  10101, uint256S("b8077f03c64cb8dee32aed80f351ddeb431c0f6c1d3abb6e1be82ef5b148fa4f")},
             }
         };
 
@@ -235,7 +236,15 @@ public:
             0  // * estimated number of transactions per second after checkpoint
         };
 
+        nUseLicensedMinersAfterHeight = 9999999;
+        vLicensedMinersPubkeys.clear();
+        vLicensedMinersPubkeys.emplace_back("020f6d2d0eb16d95f590bc1ea4e49097fa24c55b5d02839e64e602b46727fdf04e", 9999999); // SQpK545xFPmEyiEt9yjVCgqqZjrjVDoVfd
+        vLicensedMinersPubkeys.emplace_back("038c6fc023b625524bc475c0e7efe99d5e621e190c69e9b6cafeff94857bfdcdbe", 9999999); // SZSQXDpZFtZYijoASjfPzNUuVdf1VyLXH9
+        vLicensedMinersPubkeys.emplace_back("02729b51f9675a9ecb46f3e092e4c68ff569346bdcee759e313954f60e605ada28", 9999999); // ShXGwyEa6S7Gy5ZzwXsTHEynG2eJ1icgWj
+        // std::cerr << "vLicensedMinersPubkeys.size() = " << vLicensedMinersPubkeys.size() << std::endl;
+
         assert(mapHistoricBugs.empty());
+        assert(!vLicensedMinersPubkeys.empty());
     }
 
     int DefaultCheckNameDB () const
@@ -306,11 +315,12 @@ public:
         nDefaultPort = 47333;
         nPruneAfterHeight = 1000;
 
-        /* {
+        /*
+        {
             // Search for Genesis Block candidate
             uint32_t nPowLimitCompact = UintToArith256(consensus.powLimit).GetCompact();
             arith_uint256 hashTarget = arith_uint256().SetCompact(nPowLimitCompact);
-            uint32_t nNonce = 0x0; uint32_t nTime = 1600194940;
+            uint32_t nNonce = 0x0; uint32_t nTime = 1615075200; // Sun Mar 07 2021 00:00:00 GMT+0000
 
             std::cerr << "Searching for Testnet Genesis block candidate ..." << std::endl;
             std::cerr << "Target: 0x" << hashTarget.ToString() << std::endl;
@@ -331,12 +341,13 @@ public:
             std::cerr << "genesis.nVersion = " << genesis.nVersion << std::endl;
             std::cerr << "genesis.hashMerkleRoot = 0x" << genesis.hashMerkleRoot.ToString() << std::endl;
             std::cerr << "genesis.GetHash = 0x" << genesis.GetHash().ToString() << std::endl;
-        } */
+        }
+        */
 
-        genesis = CreateTestnetGenesisBlock(1600194940, 0x01691c92, 0x1d0fffff, 1, 50 * COIN);
+        genesis = CreateTestnetGenesisBlock(1615075200, 0x061b0d40, 0x1d0fffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("00000004ccfcb7808a7c2216a0292061ede3e6281c27ff3b90814c85038b07f0"));
-        assert(genesis.hashMerkleRoot == uint256S("8b85903ac5e5b1f1229296f068c4f687de69f1c9605a354211e47fc028ee4fa7"));
+        assert(consensus.hashGenesisBlock == uint256S("0x00000008847aeebcad7381740577f9076dce511e0c1b4978658802ba2b3b8781"));
+        assert(genesis.hashMerkleRoot == uint256S("0x7aec6215dcca9a09df51d0bab4cf9f43f52f0fbe680f26aeaa3dd45b188ef745"));
 
         vFixedSeeds.clear();
         vSeeds.clear();
@@ -344,7 +355,7 @@ public:
         vSeeds.emplace_back("seed.test.smartusd.org");
 
         // https://en.bitcoin.it/wiki/List_of_address_prefixes
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,60);
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,63); // updated for SmartFi (SFUSD) relaunch
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,85);
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,188);
         /* FIXME: Update these below.  */
@@ -372,7 +383,15 @@ public:
             0.0
         };
 
+        nUseLicensedMinersAfterHeight = 9999999;
+        vLicensedMinersPubkeys.clear();
+        vLicensedMinersPubkeys.emplace_back("020f6d2d0eb16d95f590bc1ea4e49097fa24c55b5d02839e64e602b46727fdf04e", 9999999); // SQpK545xFPmEyiEt9yjVCgqqZjrjVDoVfd
+        vLicensedMinersPubkeys.emplace_back("038c6fc023b625524bc475c0e7efe99d5e621e190c69e9b6cafeff94857bfdcdbe", 9999999); // SZSQXDpZFtZYijoASjfPzNUuVdf1VyLXH9
+        vLicensedMinersPubkeys.emplace_back("02729b51f9675a9ecb46f3e092e4c68ff569346bdcee759e313954f60e605ada28", 9999999); // ShXGwyEa6S7Gy5ZzwXsTHEynG2eJ1icgWj
+        // std::cerr << "vLicensedMinersPubkeys.size() = " << vLicensedMinersPubkeys.size() << std::endl;
+
         assert(mapHistoricBugs.empty());
+        assert(!vLicensedMinersPubkeys.empty());
     }
 
     int DefaultCheckNameDB () const
@@ -433,10 +452,10 @@ public:
         nDefaultPort = 47111;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateTestnetGenesisBlock(1600194940, 0x00000000, 0x207fffff, 1, 50 * COIN);
+        genesis = CreateTestnetGenesisBlock(1615075200, 0x00000000, 0x207fffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("1093283d7efb768e41bd2468de6a528096eca726c1d602ec8a85a69821593b29"));
-        assert(genesis.hashMerkleRoot == uint256S("8b85903ac5e5b1f1229296f068c4f687de69f1c9605a354211e47fc028ee4fa7"));
+        assert(consensus.hashGenesisBlock == uint256S("0x2038fa5a407cadf93f683635c446a4942de2cbc37097df1b1bf56e08458bf4e4"));
+        assert(genesis.hashMerkleRoot == uint256S("0x7aec6215dcca9a09df51d0bab4cf9f43f52f0fbe680f26aeaa3dd45b188ef745"));
 
         vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.
         vSeeds.clear();      //!< Regtest mode doesn't have any DNS seeds.
@@ -457,7 +476,7 @@ public:
             0
         };
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,60);
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,63); // updated for SmartFi (SFUSD) relaunch
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,85);
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,188);
         base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x35, 0x87, 0xCF};
