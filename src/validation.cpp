@@ -268,7 +268,7 @@ CAmount maxTxFee = DEFAULT_TRANSACTION_MAXFEE;
 
 CBlockPolicyEstimator feeEstimator;
 CTxMemPool mempool(&feeEstimator);
-//CTxMemPool tmpmempool(&feeEstimator); // 
+//CTxMemPool tmpmempool(&feeEstimator); //
 
 /** Constant stuff for coinbase transactions we create: */
 CScript COINBASE_FLAGS;
@@ -2252,7 +2252,7 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
             continue;
         (*pBlockTxns)[ptx->GetHash()] = *ptx;
     }
-    BlockTxnsPtr connectingBlockTxns(pBlockTxns); // use auto deleting object-pointer 
+    BlockTxnsPtr connectingBlockTxns(pBlockTxns); // use auto deleting object-pointer
 
     txdata.reserve(block.vtx.size()); // Required so that pointers to individual PrecomputedTransactionData don't get invalidated
     for (unsigned int i = 0; i < block.vtx.size(); i++)
@@ -2289,7 +2289,7 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
 
             if (fAddressIndex || fSpentIndex)
             {
-                for (size_t j = 0; j < tx.vin.size(); j++) 
+                for (size_t j = 0; j < tx.vin.size(); j++)
                 {
                     if (tx.IsPegsImport() && j==0) continue;
                     const CTxIn input = tx.vin[j];
@@ -2382,6 +2382,27 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
     }
     int64_t nTime3 = GetTimeMicros(); nTimeConnect += nTime3 - nTime2;
     LogPrint(BCLog::BENCH, "      - Connect %u transactions: %.2fms (%.3fms/tx, %.3fms/txin) [%.2fs (%.2fms/blk)]\n", (unsigned)block.vtx.size(), MILLI * (nTime3 - nTime2), MILLI * (nTime3 - nTime2) / block.vtx.size(), nInputs <= 1 ? 0 : MILLI * (nTime3 - nTime2) / (nInputs-1), nTimeConnect * MICRO, nTimeConnect * MILLI / nBlocksTotal);
+
+    // Licensed miners check
+    bool fCBMinerAllowed = true;
+
+    if (pindex->nHeight > chainparams.UseLicensedMinersAfterHeight()) {
+        const std::set<CScript>& setAllowedCBScripts = chainparams.GetAllowedLicensedMinersScriptsAtHeight(pindex->nHeight);
+        if (setAllowedCBScripts.size())
+        {
+            for (size_t o = 0; o < block.vtx[0]->vout.size(); o++) {
+                if (!setAllowedCBScripts.count(block.vtx[0]->vout[o].scriptPubKey))
+                {
+                    fCBMinerAllowed = false; // one of cb-scripts not found in allowed
+                    break;
+                }
+            }
+        }
+    }
+
+    if (!fCBMinerAllowed) {
+        return state.DoS(100, false, REJECT_INVALID, "bad-cb-miner", false, "not licensed miner in coinbase");
+    }
 
     CAmount blockReward = nFees + GetBlockSubsidy(pindex->nHeight, chainparams.GetConsensus());
     if (block.vtx[0]->GetValueOut() > blockReward)
@@ -3475,7 +3496,7 @@ static bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state,
 
 bool CCTxFixAcceptToMemPoolUnchecked(CTxMemPool& pool, const CTransactionRef &tx)
 {
-    // called from CheckBlock which is in cs_main and mempool.cs locks already. 
+    // called from CheckBlock which is in cs_main and mempool.cs locks already.
     LockPoints lp;
     CTxMemPoolEntry entry(tx, 0, GetTime(), chainActive.Height(), false, 4, lp);
     // LogPrintf( "adding %s to mempool from block %d\n",tx.GetHash().ToString().c_str(),chainActive.GetHeight());
@@ -3494,7 +3515,7 @@ bool myAddtomempool(CTransaction &tx, CValidationState *pstate, bool fSkipExpiry
     {
         if ( !fSkipExpiry )
             return(AcceptToMemoryPool(mempool, *pstate, MakeTransactionRef(tx), &fMissingInputs, nullptr, true, 0));
-        else 
+        else
             return(CCTxFixAcceptToMemPoolUnchecked(mempool,MakeTransactionRef(tx)));
     }
     else return(true);
@@ -3555,7 +3576,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
     if ( ASSETCHAINS_CC != 0 && !fCheckPOW )
         return true;
 
-    /* 
+    /*
     if ( ASSETCHAINS_CC != 0 ) // CC contracts might refer to transactions in the current block, from a CC spend within the same block and out of order
     {
         int32_t i,j,rejects=0,lastrejects=0;
@@ -3588,7 +3609,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
             std::list<CTransaction> removed;
             for (i=0; i<block.vtx.size(); i++)
             {
-                CValidationState state; CTransaction Tx; 
+                CValidationState state; CTransaction Tx;
                 const CTransaction &tx = *(block.vtx[i].get());
                 if ( tx.IsCoinBase() )
                     continue;
@@ -3749,7 +3770,7 @@ static bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationSta
         return state.DoS(100, false, REJECT_INVALID, "bad-diffbits", false, "incorrect proof of work");
 
     // Check against checkpoints
-    if (fCheckpointsEnabled) 
+    if (fCheckpointsEnabled)
     {
         // Don't accept any forks from the main chain prior to last checkpoint.
         // GetLastCheckpoint finds the last checkpoint in MapCheckpoints that's in our
@@ -4841,11 +4862,11 @@ bool LoadBlockIndex(const CChainParams& chainparams)
         // Use the provided setting for -addressindex in the new database
         fAddressIndex = gArgs.GetBoolArg("-addressindex", DEFAULT_ADDRESSINDEX);
         pblocktree->WriteFlag("addressindex", fAddressIndex);
-        
+
         // Use the provided setting for -timestampindex in the new database
         fTimestampIndex = gArgs.GetBoolArg("-timestampindex", DEFAULT_TIMESTAMPINDEX);
         pblocktree->WriteFlag("timestampindex", fTimestampIndex);
-        
+
         fSpentIndex = gArgs.GetBoolArg("-spentindex", DEFAULT_SPENTINDEX);
         pblocktree->WriteFlag("spentindex", fSpentIndex);
         fprintf(stderr,"fAddressIndex.%d/%d fSpentIndex.%d/%d\n",fAddressIndex,DEFAULT_ADDRESSINDEX,fSpentIndex,DEFAULT_SPENTINDEX);
@@ -5797,7 +5818,7 @@ bool myGetTransactionBlockTxns(const uint256 &hash, CTransaction &txOut, uint256
             {
                 txOut = foundit->second;
                 return true;
-            }     
+            }
         }
         else
         {
@@ -5829,7 +5850,7 @@ bool myGetTransactionBlockTxns(const uint256 &hash, CTransaction &txOut, uint256
                 /*
                 TODO: somehow after file >> txOut (where txOut is CTransaction and not CTransactionRef), txOut.GetHash gives
                 wrong result. Here it fixed by adding ptxOutRef (CTransactionRef), but better to change input params of
-                myGetTransaction from CTransaction on CTransactionRef in future and modify all related code! Also, we should 
+                myGetTransaction from CTransaction on CTransactionRef in future and modify all related code! Also, we should
                 sort out that ptxOutRef->GetHash() and txOut.GetHash() mystery!
                 */
 
@@ -6007,7 +6028,7 @@ bool GetNotarisationNotaries(uint8_t notarypubkeys[64][33], int8_t &numNN, const
         uint256 hash; CTransactionRef tx1;
         if ( GetTransaction(txin.prevout.hash,tx1,Params().GetConsensus(),hash,false) )
         {
-            for (int8_t i = 0; i < numNN; i++) 
+            for (int8_t i = 0; i < numNN; i++)
             {
                 script = (uint8_t *)&tx1->vout[txin.prevout.n].scriptPubKey[0];
                 scriptlen = (int32_t)tx1->vout[txin.prevout.n].scriptPubKey.size();
