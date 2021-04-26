@@ -18,13 +18,14 @@ static const CAmount CENT = 1000000;
 /** No amount larger than this (in satoshi) is valid.
  *
  * Note that this constant is *not* the total money supply, which in SmartFi
- * currently happens to be less than 999,000,000,000 SFUSD for various reasons, but
+ * currently happens to be less than 90,000,000,000 SFUSD for various reasons, but
  * rather a sanity check. As this sanity check is used by consensus-critical
  * validation code, the exact value of the MAX_MONEY constant is consensus
  * critical; in unusual circumstances like a(nother) overflow bug that allowed
  * for the creation of coins out of thin air modification could lead to a fork.
  * */
-static const CAmount MAX_MONEY = 999000000000 * COIN; // updated for SmartFi (SFUSD) relaunch
+static const CAmount MAX_MONEY = 90000000000LL * COIN; // updated for SmartFi (SFUSD) relaunch
+
 inline bool MoneyRange(const CAmount& nValue) { return (nValue >= 0 && nValue <= MAX_MONEY); }
 
 #endif //  BITCOIN_AMOUNT_H
