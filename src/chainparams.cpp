@@ -106,10 +106,10 @@ public:
            after them.  They are too deep in the chain to be ever reorged,
            and thus this is also fine.  */
         // FIXME: Activate BIP16 with a softfork.
-        consensus.nCCActivationHeight = 9999999;
+        consensus.nCCActivationHeight = 128;
         consensus.BIP16Height = 10000000;
         consensus.BIP34Height = 128;
-        consensus.BIP34Hash = uint256S("0x00000000128e723cb938fc76eb625f101797abac70f54c4b174e04d0c6128d26");
+        consensus.BIP34Hash = uint256S("0x000000001419c08805f6e6feb69c33fadc375b17ae19a411e2ecfd8bcccc332a");
         consensus.BIP65Height = 128;
         consensus.BIP66Height = 128;
         consensus.powLimit = uint256S("00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
@@ -140,7 +140,7 @@ public:
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000000010000100");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x00000000128e723cb938fc76eb625f101797abac70f54c4b174e04d0c6128d26");
+        consensus.defaultAssumeValid = uint256S("0x000000001419c08805f6e6feb69c33fadc375b17ae19a411e2ecfd8bcccc332a");
 
         consensus.nAuxpowChainId = 0x0333;
         consensus.nAuxpowStartHeight = 128;
@@ -222,9 +222,9 @@ public:
 
         checkpointData = {
             {
-                // {      1, uint256S("000000005af55a1a20939351be6c39587add71b511caa411110b8411fb4986fd")},
-                // {    128, uint256S("00000000128e723cb938fc76eb625f101797abac70f54c4b174e04d0c6128d26")},
-                // {  10101, uint256S("b8077f03c64cb8dee32aed80f351ddeb431c0f6c1d3abb6e1be82ef5b148fa4f")},
+                {      1, uint256S("000000006918d44ef41f28dd9bde0b677731f610b6fee85ad92557a65e56ad06")},
+                {    128, uint256S("000000001419c08805f6e6feb69c33fadc375b17ae19a411e2ecfd8bcccc332a")},
+                {    129, uint256S("000000006a874f00f9e16280762554aeaa0455875b548af22ab15043b36172ce")},
             }
         };
 
