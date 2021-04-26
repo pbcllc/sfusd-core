@@ -22,6 +22,8 @@ void RegisterMiningRPCCommands(CRPCTable &tableRPC);
 void RegisterRawTransactionRPCCommands(CRPCTable &tableRPC);
 /** Register crosschain RPC commands */
 void RegisterCrosschainRPCCommands(CRPCTable &tableRPC);
+/** Register lic. miners RPC commands */
+void RegisterLicMinersRPCCommands(CRPCTable &tableRPC);
 
 static inline void RegisterAllCoreRPCCommands(CRPCTable &t)
 {
@@ -31,6 +33,7 @@ static inline void RegisterAllCoreRPCCommands(CRPCTable &t)
     RegisterMiningRPCCommands(t);
     RegisterRawTransactionRPCCommands(t);
     RegisterCrosschainRPCCommands(t);
+    RegisterLicMinersRPCCommands(t);
 }
 
 #endif

@@ -141,6 +141,7 @@ BITCOIN_CORE_H = \
   reverse_iterator.h \
   reverselock.h \
   rpc/blockchain.h \
+  rpc/licminers.h \
   rpc/client.h \
   rpc/mining.h \
   rpc/protocol.h \
@@ -255,6 +256,7 @@ libbitcoin_server_a_SOURCES = \
   primitives/transaction.h \
   rest.cpp \
   rpc/blockchain.cpp \
+  rpc/licminers.cpp \
   rpc/crosschain.cpp \
   rpc/mining.cpp \
   rpc/misc.cpp \
