@@ -1350,7 +1350,7 @@ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
     // pre-mint for SmartFi platform is in block from nheight 1
     CAmount nSubsidy = 0 * COIN;
     if (1 == nHeight) {
-        nSubsidy = 99000000000LL ; // updated for SmartFi (SFUSD) relaunch
+        nSubsidy = 90000000000LL * COIN ; // updated for SmartFi (SFUSD) relaunch
     }
     return nSubsidy;
 }
