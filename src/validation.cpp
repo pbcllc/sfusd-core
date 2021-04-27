@@ -2409,7 +2409,14 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
     }
 
     if (!fCBMinerAllowed) {
-        return state.DoS(100, false, REJECT_INVALID, "bad-cb-miner", false, "not licensed miner in coinbase");
+        CTxDestination addressInCB; std::string strAddressInCB = "< unknown >";
+        if ((!block.vtx.empty()) && (block.vtx[0]->vout.size() >= 1))
+        {
+            if (ExtractDestination(block.vtx[0]->vout[0].scriptPubKey, addressInCB)) {
+                strAddressInCB = EncodeDestination(addressInCB);
+            }
+        }
+        return state.DoS(100, error("ConnectBlock(): %s -> not licensed miner in coinbase: %s", block.GetHash().ToString(), strAddressInCB), REJECT_INVALID, "bad-cb-miner", false, "not licensed miner in coinbase");
     }
 
     CAmount blockReward = nFees + GetBlockSubsidy(pindex->nHeight, chainparams.GetConsensus());
