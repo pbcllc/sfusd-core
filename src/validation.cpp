@@ -2390,11 +2390,19 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
         const std::set<CScript>& setAllowedCBScripts = chainparams.GetAllowedLicensedMinersScriptsAtHeight(pindex->nHeight);
         if (setAllowedCBScripts.size())
         {
-            for (size_t o = 0; o < block.vtx[0]->vout.size(); o++) {
-                if (!setAllowedCBScripts.count(block.vtx[0]->vout[o].scriptPubKey))
+            CScript scriptDummy = CScript() << OP_TRUE;
+
+            if (!block.vtx.empty())
+            {
+                if (!(block.vtx[0]->vout.size() == 1 && block.vtx[0]->vout[0].scriptPubKey == scriptDummy)) // look at getblocktemplate (mining.cpp), allowing blocktemplate creation
                 {
-                    fCBMinerAllowed = false; // one of cb-scripts not found in allowed
-                    break;
+                    for (size_t o = 0; o < block.vtx[0]->vout.size(); o++) {
+                        if (!setAllowedCBScripts.count(block.vtx[0]->vout[o].scriptPubKey))
+                        {
+                            fCBMinerAllowed = false; // one of cb-scripts not found in allowed
+                            break;
+                        }
+                    }
                 }
             }
         }
