@@ -3587,6 +3587,8 @@ UniValue getauxblock(const JSONRPCRequest& request)
             + HelpExampleRpc("getauxblock", "")
             );
 
+
+    /*
     std::shared_ptr<CReserveScript> coinbaseScript;
     pwallet->GetScriptForMining(coinbaseScript);
 
@@ -3594,21 +3596,58 @@ UniValue getauxblock(const JSONRPCRequest& request)
     if (!coinbaseScript)
         throw JSONRPCError(RPC_WALLET_KEYPOOL_RAN_OUT, "Error: Keypool ran out, please call keypoolrefill first");
 
-    //throw an error if no script was provided
+    // throw an error if no script was provided
     if (!coinbaseScript->reserveScript.size())
         throw JSONRPCError(RPC_INTERNAL_ERROR, "No coinbase script available (mining requires a wallet)");
 
-    /* Create a new block */
+    // Create a new block
     if (request.params.size() == 0)
         return AuxMiningCreateBlock(coinbaseScript->reserveScript);
+    */
+
+   std::shared_ptr<CScript> coinbaseScript;
+   std::shared_ptr<CReserveScript> coinbaseReserveScript;
+   bool fReserveUsed = false;
+
+   {
+        LOCK(cs_main);
+        CBlockIndex* const pindexPrev = chainActive.Tip();
+        int64_t nHeight = pindexPrev->nHeight+1;
+        const CChainParams& m_params = Params();
+        const std::set<CScript>& setAllowedMiners = m_params.GetAllowedLicensedMinersScriptsAtHeight(nHeight);
+
+        if (setAllowedMiners.size() != 0) {
+            std::set<CScript>::iterator it = setAllowedMiners.begin();
+            // we will take first allowed miner for merged mining, or we can somehow advance iterator
+            // to take the script that we exactly need
+            coinbaseScript = std::make_shared<CScript>(*it);
+        }
+        else
+        {
+            // any script for mining is allowed, back to original scheme
+            pwallet->GetScriptForMining(coinbaseReserveScript);
+            fReserveUsed = true;
+            if (!coinbaseReserveScript) {
+                throw JSONRPCError(RPC_WALLET_KEYPOOL_RAN_OUT, "Error: Keypool ran out, please call keypoolrefill first");
+            }
+            if (!coinbaseReserveScript->reserveScript.size()) {
+                throw JSONRPCError(RPC_INTERNAL_ERROR, "No coinbase script available (mining requires a wallet)");
+            }
+            coinbaseScript = std::make_shared<CScript>(coinbaseReserveScript->reserveScript);
+        }
+   }
+
+    // Create a new block
+    if (request.params.size() == 0)
+        return AuxMiningCreateBlock(*coinbaseScript);
 
     /* Submit a block instead.  Note that this need not lock cs_main,
        since ProcessNewBlock below locks it instead.  */
     assert(request.params.size() == 2);
     bool fAccepted = AuxMiningSubmitBlock(request.params[0].get_str(), 
                                           request.params[1].get_str());
-    if (fAccepted)
-        coinbaseScript->KeepScript();
+    if (fAccepted && fReserveUsed)
+        coinbaseReserveScript->KeepScript();
 
     return fAccepted;
 }
