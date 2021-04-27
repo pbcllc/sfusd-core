@@ -19,10 +19,10 @@ BEGIN
     BEGIN
         BLOCK "040904E4" // U.S. English - multilingual (hex)
         BEGIN
-            VALUE "CompanyName",        "Namecoin"
-            VALUE "FileDescription",    PACKAGE_NAME " (GUI node for Namecoin)"
+            VALUE "CompanyName",        "SmartUSD"
+            VALUE "FileDescription",    PACKAGE_NAME " (GUI node for SmartUSD)"
             VALUE "FileVersion",        VER_FILEVERSION_STR
-            VALUE "InternalName",       "namecoin-qt"
+            VALUE "InternalName",       "smartusd-qt"
             VALUE "LegalCopyright",     COPYRIGHT_STR
             VALUE "LegalTrademarks1",   "Distributed under the MIT software license, see the accompanying file COPYING or http://www.opensource.org/licenses/mit-license.php."
             VALUE "OriginalFilename",   "namecoin-qt.exe"
