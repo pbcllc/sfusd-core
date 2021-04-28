@@ -65,7 +65,7 @@ public:
         /* Don't apply the name operations and don't put the names into the
            UTXO set.  They are immediately unspendable.  This is used for the
            "d/wav" stealing output (which is not used later on) and also
-           for the NAME_FIRSTUPDATE's that are in non-PowerBlockCoin tx.  */
+           for the NAME_FIRSTUPDATE's that are in non-SmartUSD tx.  */
         BUG_FULLY_IGNORE,
     };
 
@@ -93,6 +93,8 @@ public:
     const CCheckpointData& Checkpoints() const { return checkpointData; }
     const ChainTxData& TxData() const { return chainTxData; }
     void UpdateVersionBitsParameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout);
+    const std::set<CScript> GetAllowedLicensedMinersScriptsAtHeight(int64_t height) const;
+    uint64_t UseLicensedMinersAfterHeight() const { return nUseLicensedMinersAfterHeight; }
 
     /* Check whether the given tx is a "historic relic" for which to
        skip the validity check.  Return also the "type" of the bug,
@@ -118,6 +120,9 @@ protected:
     bool fMineBlocksOnDemand;
     CCheckpointData checkpointData;
     ChainTxData chainTxData;
+
+    uint64_t nUseLicensedMinersAfterHeight; // after that height we will check every block, if it's created by licensed miner
+    std::vector< std::pair<std::string, uint64_t> > vLicensedMinersPubkeys; // vector of pairs pubkey <-> lastblockheight till which (included) miner pubkey is valid
 
     /* Map (block height, txid) pairs for buggy transactions onto their
        bug type value.  */

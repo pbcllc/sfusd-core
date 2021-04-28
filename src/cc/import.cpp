@@ -35,7 +35,7 @@
 
 extern uint16_t ASSETCHAINS_CODAPORT,ASSETCHAINS_BEAMPORT;
 extern uint8_t ASSETCHAINS_OVERRIDE_PUBKEY33[33];
-extern uint256 POWERBLOCKCOIN_EARLYTXID;
+extern uint256 SMARTUSD_EARLYTXID;
 extern std::string ASSETCHAINS_SELFIMPORT;
 
 // utilities from gateways.cpp
@@ -355,9 +355,9 @@ int32_t CheckGATEWAYimport(CTransaction importTx,CTransaction burnTx,std::string
     std::vector<std::pair<CAddressUnspentKey, CAddressUnspentValue> > unspentOutputs;
 
     // ASSETCHAINS_SELFIMPORT is coin
-    if (POWERBLOCKCOIN_EARLYTXID!=zeroid && bindtxid!=POWERBLOCKCOIN_EARLYTXID)
+    if (SMARTUSD_EARLYTXID!=zeroid && bindtxid!=SMARTUSD_EARLYTXID)
     { 
-        LOGSTREAM("importgateway", CCLOG_INFO, stream << "CheckGATEWAYimport invalid import gateway. On this chain only valid import gateway is " << POWERBLOCKCOIN_EARLYTXID.GetHex() << std::endl);
+        LOGSTREAM("importgateway", CCLOG_INFO, stream << "CheckGATEWAYimport invalid import gateway. On this chain only valid import gateway is " << SMARTUSD_EARLYTXID.GetHex() << std::endl);
         return(-1);
     }
     // check for valid burn from external coin blockchain and if valid return(0);

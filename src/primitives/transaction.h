@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2017 The Bitcoin Core developers
-// Copyright (c) 2020 The Powerblockcoin Core developers
+// Copyright (c) 2020 The SmartUSD Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -269,7 +269,7 @@ class CTransaction
 public:
     // Default transaction version.
     // FIXME: Upstream Bitcoin has default version set to 2 already.  Do this
-    // once we forked to make the tx version irrelevant for PowerBlockCoin.
+    // once we forked to make the tx version irrelevant for SmartUSD.
     static const int32_t CURRENT_VERSION=1;
 
     // Changing the default transaction version requires a two step process: first

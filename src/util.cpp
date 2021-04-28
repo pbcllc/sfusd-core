@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2017 The Bitcoin Core developers
-// Copyright (c) 2020 The Powerblockcoin Core developers
+// Copyright (c) 2020 The SmartUSD Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -84,8 +84,8 @@
 // Application startup time (used for uptime calculation)
 const int64_t nStartupTime = GetTime();
 
-const char * const BITCOIN_CONF_FILENAME = "powerblockcoin.conf";
-const char * const BITCOIN_PID_FILENAME = "powerblockcoind.pid";
+const char * const BITCOIN_CONF_FILENAME = "smartusd.conf";
+const char * const BITCOIN_PID_FILENAME = "smartusdd.pid";
 const char * const DEFAULT_DEBUGLOGFILE = "debug.log";
 
 ArgsManager gArgs;
@@ -579,7 +579,7 @@ static std::string FormatException(const std::exception* pex, const char* pszThr
     char pszModule[MAX_PATH] = "";
     GetModuleFileNameA(nullptr, pszModule, sizeof(pszModule));
 #else
-    const char* pszModule = "powerblockcoin";
+    const char* pszModule = "smartusd";
 #endif
     if (pex)
         return strprintf(
@@ -598,13 +598,13 @@ void PrintExceptionContinue(const std::exception* pex, const char* pszThread)
 
 fs::path GetDefaultDataDir()
 {
-    // Windows < Vista: C:\Documents and Settings\Username\Application Data\PowerBlockCoin
-    // Windows >= Vista: C:\Users\Username\AppData\Roaming\PowerBlockCoin
-    // Mac: ~/Library/Application Support/PowerBlockCoin
-    // Unix: ~/.powerblockcoin
+    // Windows < Vista: C:\Documents and Settings\Username\Application Data\SmartUSD
+    // Windows >= Vista: C:\Users\Username\AppData\Roaming\SmartUSD
+    // Mac: ~/Library/Application Support/SmartUSD
+    // Unix: ~/.smartusd
 #ifdef WIN32
     // Windows
-    return GetSpecialFolderPath(CSIDL_APPDATA) / "PowerBlockCoin";
+    return GetSpecialFolderPath(CSIDL_APPDATA) / "SmartUSD";
 #else
     fs::path pathRet;
     char* pszHome = getenv("HOME");
@@ -614,10 +614,10 @@ fs::path GetDefaultDataDir()
         pathRet = fs::path(pszHome);
 #ifdef MAC_OSX
     // Mac
-    return pathRet / "Library/Application Support/PowerBlockCoin";
+    return pathRet / "Library/Application Support/SmartUSD";
 #else
     // Unix
-    return pathRet / ".powerblockcoin";
+    return pathRet / ".smartusd";
 #endif
 #endif
 }

@@ -1,6 +1,6 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2017 The Bitcoin Core developers
-// Copyright (c) 2020 The Powerblockcoin Core developers
+// Copyright (c) 2020 The SmartUSD Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -1155,8 +1155,8 @@ UniValue gettxout(const JSONRPCRequest& request)
             "     \"hex\" : \"hex\",        (string) \n"
             "     \"reqSigs\" : n,          (numeric) Number of required signatures\n"
             "     \"type\" : \"pubkeyhash\", (string) The type, eg pubkeyhash\n"
-            "     \"addresses\" : [          (array of string) array of powerblockcoin addresses\n"
-            "        \"address\"     (string) powerblockcoin address\n"
+            "     \"addresses\" : [          (array of string) array of smartusd addresses\n"
+            "        \"address\"     (string) smartusd address\n"
             "        ,...\n"
             "     ]\n"
             "  },\n"
@@ -1808,12 +1808,12 @@ UniValue prices(const JSONRPCRequest& request)
     int32_t maxsamples = atoi(request.params[0].get_str().c_str());
     if ( maxsamples < 1 )
         maxsamples = 1;
-    nextheight = powerblockcoin_nextheight();
+    nextheight = smartusd_nextheight();
     UniValue a(UniValue::VARR);
     if ( PRICES_DAYWINDOW < 7 )
         throw JSONRPCError(RPC_INVALID_PARAMETER, "daywindow is too small");
     width = maxsamples+2*PRICES_DAYWINDOW+PRICES_SMOOTHWIDTH;
-    numpricefeeds = powerblockcoin_heightpricebits(&seed,rawprices,nextheight-1);
+    numpricefeeds = smartusd_heightpricebits(&seed,rawprices,nextheight-1);
     if ( numpricefeeds <= 0 )
         throw JSONRPCError(RPC_INVALID_PARAMETER, "illegal numpricefeeds");
     prices = (uint32_t *)calloc(sizeof(*prices),width*numpricefeeds);
@@ -1825,7 +1825,7 @@ UniValue prices(const JSONRPCRequest& request)
             throw JSONRPCError(RPC_INVALID_PARAMETER, "Block height out of range");
         else
         {
-            if ( (n= powerblockcoin_heightpricebits(0,rawprices,ht)) > 0 )
+            if ( (n= smartusd_heightpricebits(0,rawprices,ht)) > 0 )
             {
                 if ( n != numpricefeeds )
                     throw JSONRPCError(RPC_INVALID_PARAMETER, "numprices != first numprices");
@@ -1850,7 +1850,7 @@ UniValue prices(const JSONRPCRequest& request)
     for (j=1; j<numpricefeeds; j++)
     {
         UniValue item(UniValue::VOBJ),p(UniValue::VARR);
-        if ( (str= powerblockcoin_pricename(name,j)) != 0 )
+        if ( (str= smartusd_pricename(name,j)) != 0 )
         {
             item.push_back(Pair("name",str));
             if ( numsamples >= width )
@@ -1859,10 +1859,10 @@ UniValue prices(const JSONRPCRequest& request)
                 {
                     offset = j*width + i;
                     rngval = (rngval*11109 + 13849);
-                    if ( (correlated[i]= powerblockcoin_pricecorrelated(rngval,j,&prices[offset],1,0,PRICES_SMOOTHWIDTH)) < 0 )
+                    if ( (correlated[i]= smartusd_pricecorrelated(rngval,j,&prices[offset],1,0,PRICES_SMOOTHWIDTH)) < 0 )
                         throw JSONRPCError(RPC_INVALID_PARAMETER, "null correlated price");
                     {
-                        if ( powerblockcoin_priceget(checkprices,j,nextheight-1-i,1) >= 0 )
+                        if ( smartusd_priceget(checkprices,j,nextheight-1-i,1) >= 0 )
                         {
                             if ( checkprices[1] != correlated[i] )
                             {
@@ -1876,8 +1876,8 @@ UniValue prices(const JSONRPCRequest& request)
                 for (i=0; i<maxsamples&&i<numsamples; i++)
                 {
                     offset = j*width + i;
-                    smoothed = powerblockcoin_priceave(tmpbuf,&correlated[i],1);
-                    if ( powerblockcoin_priceget(checkprices,j,nextheight-1-i,1) >= 0 )
+                    smoothed = smartusd_priceave(tmpbuf,&correlated[i],1);
+                    if ( smartusd_priceget(checkprices,j,nextheight-1-i,1) >= 0 )
                     {
                         if ( checkprices[2] != smoothed )
                         {
@@ -1886,7 +1886,7 @@ UniValue prices(const JSONRPCRequest& request)
                         }
                     }
                     UniValue parr(UniValue::VARR);
-                    parr.push_back(ValueFromAmount((int64_t)prices[offset] * powerblockcoin_pricemult(j)));
+                    parr.push_back(ValueFromAmount((int64_t)prices[offset] * smartusd_pricemult(j)));
                     parr.push_back(ValueFromAmount(correlated[i]));
                     parr.push_back(ValueFromAmount(smoothed));
                     // compare to alternate method
@@ -1900,7 +1900,7 @@ UniValue prices(const JSONRPCRequest& request)
                 {
                     offset = j*width + i;
                     UniValue parr(UniValue::VARR);
-                    parr.push_back(ValueFromAmount((int64_t)prices[offset] * powerblockcoin_pricemult(j)));
+                    parr.push_back(ValueFromAmount((int64_t)prices[offset] * smartusd_pricemult(j)));
                     p.push_back(parr);
                 }
             }

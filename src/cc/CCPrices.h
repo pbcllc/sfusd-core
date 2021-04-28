@@ -20,7 +20,7 @@
 
 #include "CCinclude.h"
 extern void GetKomodoEarlytxidScriptPub();
-extern CScript POWERBLOCKCOIN_EARLYTXID_SCRIPTPUB;
+extern CScript SMARTUSD_EARLYTXID_SCRIPTPUB;
 
 extern int32_t ASSETCHAINS_BLOCKTIME;
 
@@ -28,22 +28,22 @@ extern int32_t ASSETCHAINS_BLOCKTIME;
 #define PRICES_TXFEE 10000
 #define PRICES_MAXLEVERAGE 777
 #define PRICES_SMOOTHWIDTH 1
-#define POWERBLOCKCOIN_MAXPRICES 2048 // must be power of 2 and less than 8192
-#define POWERBLOCKCOIN_PRICEMASK (~(POWERBLOCKCOIN_MAXPRICES -  1))     // actually 1111 1000 0000 0000
-#define PRICES_WEIGHT (POWERBLOCKCOIN_MAXPRICES * 1)            //          0000 1000 0000 0000
-#define PRICES_MULT (POWERBLOCKCOIN_MAXPRICES * 2)              //          0001 0000 0000 0000
-#define PRICES_DIV (POWERBLOCKCOIN_MAXPRICES * 3)               //          0001 1000 0000 0000
-#define PRICES_INV (POWERBLOCKCOIN_MAXPRICES * 4)               //          0010 0000 0000 0000
-#define PRICES_MDD (POWERBLOCKCOIN_MAXPRICES * 5)               //          0010 1000 0000 0000
-#define PRICES_MMD (POWERBLOCKCOIN_MAXPRICES * 6)               //          0011 0000 0000 0000
-#define PRICES_MMM (POWERBLOCKCOIN_MAXPRICES * 7)               //          0011 1000 0000 0000
-#define PRICES_DDD (POWERBLOCKCOIN_MAXPRICES * 8)               //          0100 0000 0000 0000
+#define SMARTUSD_MAXPRICES 2048 // must be power of 2 and less than 8192
+#define SMARTUSD_PRICEMASK (~(SMARTUSD_MAXPRICES -  1))     // actually 1111 1000 0000 0000
+#define PRICES_WEIGHT (SMARTUSD_MAXPRICES * 1)            //          0000 1000 0000 0000
+#define PRICES_MULT (SMARTUSD_MAXPRICES * 2)              //          0001 0000 0000 0000
+#define PRICES_DIV (SMARTUSD_MAXPRICES * 3)               //          0001 1000 0000 0000
+#define PRICES_INV (SMARTUSD_MAXPRICES * 4)               //          0010 0000 0000 0000
+#define PRICES_MDD (SMARTUSD_MAXPRICES * 5)               //          0010 1000 0000 0000
+#define PRICES_MMD (SMARTUSD_MAXPRICES * 6)               //          0011 0000 0000 0000
+#define PRICES_MMM (SMARTUSD_MAXPRICES * 7)               //          0011 1000 0000 0000
+#define PRICES_DDD (SMARTUSD_MAXPRICES * 8)               //          0100 0000 0000 0000
 
 extern struct priceinfo
 {
     FILE *fp;
     char symbol[64];
-} PRICES[POWERBLOCKCOIN_MAXPRICES];
+} PRICES[SMARTUSD_MAXPRICES];
 
 //#define PRICES_NORMFACTOR   (int64_t)(SATOSHIDEN)
 //#define PRICES_POINTFACTOR   (int64_t)10000

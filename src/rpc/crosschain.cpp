@@ -105,7 +105,7 @@ UniValue height_MoM(const JSONRPCRequest& request)
         height = chainActive.Tip()->GetHeight();
     }
     //LogPrintf("height_MoM height.%d\n",height);
-    depth = powerblockcoin_MoM(&notarized_height,&MoM,&kmdtxid,height,&MoMoM,&MoMoMoffset,&MoMoMdepth,&kmdstarti,&kmdendi);
+    depth = smartusd_MoM(&notarized_height,&MoM,&kmdtxid,height,&MoMoM,&MoMoMoffset,&MoMoMdepth,&kmdstarti,&kmdendi);
     ret.push_back(Pair("coin",(char *)(ASSETCHAINS_SYMBOL[0] == 0 ? "KMD" : ASSETCHAINS_SYMBOL)));
     ret.push_back(Pair("height",height));
     ret.push_back(Pair("timestamp",(uint64_t)timestamp));
@@ -166,7 +166,7 @@ UniValue calc_MoM(const JSONRPCRequest& request)
     if ( height <= 0 || MoMdepth <= 0 || MoMdepth >= height )
         throw runtime_error("calc_MoM illegal height or MoMdepth\n");
     //LogPrintf("height_MoM height.%d\n",height);
-    MoM = powerblockcoin_calcMoM(height,MoMdepth);
+    MoM = smartusd_calcMoM(height,MoMdepth);
     ret.push_back(Pair("coin",(char *)(ASSETCHAINS_SYMBOL[0] == 0 ? "KMD" : ASSETCHAINS_SYMBOL)));
     ret.push_back(Pair("height",height));
     ret.push_back(Pair("MoMdepth",MoMdepth));
@@ -1162,7 +1162,7 @@ UniValue getNotarisationsForBlock(const JSONRPCRequest& request)
     UniValue labs(UniValue::VARR);
     UniValue kmd(UniValue::VARR);
     int8_t numNN = 0, numSN = 0; uint8_t notarypubkeys[64][33] = {0}; uint8_t LABSpubkeys[64][33] = {0};
-    numNN = powerblockcoin_notaries(notarypubkeys, height, chainActive[height]->nTime);
+    numNN = smartusd_notaries(notarypubkeys, height, chainActive[height]->nTime);
     numSN = numStakedNotaries(LABSpubkeys,STAKED_era(chainActive[height]->nTime));
 
     BOOST_FOREACH(const Notarisation& n, nibs)

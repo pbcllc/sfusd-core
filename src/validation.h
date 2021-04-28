@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2017 The Bitcoin Core developers
-// Copyright (c) 2020 The Powerblockcoin Core developers
+// Copyright (c) 2020 The SmartUSD Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -177,7 +177,7 @@ static const bool DEFAULT_PEERBLOOMFILTERS = true;
 /** Default for -stopatheight */
 static const int DEFAULT_STOPATHEIGHT = 0;
 
-//extern int32_t POWERBLOCKCOIN_CONNECTING;
+//extern int32_t SMARTUSD_CONNECTING;
 
 struct BlockHasher
 {
@@ -879,28 +879,28 @@ bool LoadMempool();
 CBlockIndex *getblockindex(uint256 hash);
 uint32_t chainactive_timestamp();
 int32_t currentheight();
-int32_t powerblockcoin_nextheight();
+int32_t smartusd_nextheight();
 int32_t longestchain();
-int32_t _powerblockcoin_heightpricebits(uint64_t *seedp,uint32_t *heightbits,CBlock *block);
-int32_t powerblockcoin_heightpricebits(uint64_t *seedp,uint32_t *heightbits,int32_t nHeight);
-CBlockIndex *powerblockcoin_chainactive(int32_t height);
-int32_t powerblockcoin_blockload(CBlock& block,CBlockIndex *pindex);
-char *powerblockcoin_pricename(char *name,int32_t ind);
-int64_t powerblockcoin_pricecorrelated(uint64_t seed,int32_t ind,uint32_t *rawprices,int32_t rawskip,uint32_t *nonzprices,int32_t smoothwidth);
-int64_t powerblockcoin_pricemult(int32_t ind);
-int64_t powerblockcoin_priceave(int64_t *buf,int64_t *correlated,int32_t cskip);
-int32_t powerblockcoin_priceget(int64_t *buf64,int32_t ind,int32_t height,int32_t numblocks);
+int32_t _smartusd_heightpricebits(uint64_t *seedp,uint32_t *heightbits,CBlock *block);
+int32_t smartusd_heightpricebits(uint64_t *seedp,uint32_t *heightbits,int32_t nHeight);
+CBlockIndex *smartusd_chainactive(int32_t height);
+int32_t smartusd_blockload(CBlock& block,CBlockIndex *pindex);
+char *smartusd_pricename(char *name,int32_t ind);
+int64_t smartusd_pricecorrelated(uint64_t seed,int32_t ind,uint32_t *rawprices,int32_t rawskip,uint32_t *nonzprices,int32_t smoothwidth);
+int64_t smartusd_pricemult(int32_t ind);
+int64_t smartusd_priceave(int64_t *buf,int64_t *correlated,int32_t cskip);
+int32_t smartusd_priceget(int64_t *buf64,int32_t ind,int32_t height,int32_t numblocks);
 bool myGetTransaction(const uint256 &hash, CTransaction &txOut, uint256 &hashBlock);
 bool myGetTransactionBlockTxns(const uint256 &hash, CTransaction &txOut, uint256 &hashBlock, BlockTxnsPtr blockTxns);
 bool myGetTransactionEval(Eval *eval, const uint256 &hash, CTransaction &txOut, uint256 &hashBlock);
 
-uint64_t powerblockcoin_block_prg(uint32_t nHeight);
+uint64_t smartusd_block_prg(uint32_t nHeight);
 int32_t iguana_rwnum(int32_t rwflag,uint8_t *serialized,int32_t len,void *endianedp);
 int32_t iguana_rwbignum(int32_t rwflag,uint8_t *serialized,int32_t len,uint8_t *endianedp);
-uint256 powerblockcoin_calcMoM(int32_t height,int32_t MoMdepth);
-int32_t powerblockcoin_MoM(int32_t *notarized_heightp,uint256 *MoMp,uint256 *kmdtxidp,int32_t nHeight,uint256 *MoMoMp,int32_t *MoMoMoffsetp,int32_t *MoMoMdepthp,int32_t *kmdstartip,int32_t *kmdendip);
-int32_t powerblockcoin_MoMdata(int32_t *notarized_htp,uint256 *MoMp,uint256 *kmdtxidp,int32_t height,uint256 *MoMoMp,int32_t *MoMoMoffsetp,int32_t *MoMoMdepthp,int32_t *kmdstartip,int32_t *kmdendip);
-int32_t powerblockcoin_notaries(uint8_t pubkeys[64][33],int32_t height,uint32_t timestamp);
+uint256 smartusd_calcMoM(int32_t height,int32_t MoMdepth);
+int32_t smartusd_MoM(int32_t *notarized_heightp,uint256 *MoMp,uint256 *kmdtxidp,int32_t nHeight,uint256 *MoMoMp,int32_t *MoMoMoffsetp,int32_t *MoMoMdepthp,int32_t *kmdstartip,int32_t *kmdendip);
+int32_t smartusd_MoMdata(int32_t *notarized_htp,uint256 *MoMp,uint256 *kmdtxidp,int32_t height,uint256 *MoMoMp,int32_t *MoMoMoffsetp,int32_t *MoMoMdepthp,int32_t *kmdstartip,int32_t *kmdendip);
+int32_t smartusd_notaries(uint8_t pubkeys[64][33],int32_t height,uint32_t timestamp);
 bool GetNotarisationNotaries(uint8_t notarypubkeys[64][33], int8_t &numNN, const std::vector<CTxIn> &vin, std::vector<int8_t> &NotarisationNotaries);
 
 #endif // BITCOIN_VALIDATION_H

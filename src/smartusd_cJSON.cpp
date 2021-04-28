@@ -26,7 +26,7 @@
 #include <math.h>
 
 #include "cJSON.h"
-#include "powerblockcoin_cJSON.h"
+#include "smartusd_cJSON.h"
 #include "cJSON.c"
 //#include <util.h>
 

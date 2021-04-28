@@ -100,7 +100,7 @@ CPubKey pubkey2pk(std::vector<uint8_t> vpubkey)
     return(pk);
 }
 
-// in powerblockcoin category is either ccinfo or ccdebug
+// in smartusd category is either ccinfo or ccdebug
 void CCLogPrintStr(const char *category, int level, const std::string &str)
 {
     if (level < 0)

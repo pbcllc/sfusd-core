@@ -74,7 +74,7 @@ Details.
 #include "../validation.h"
 #include "../util.h"
 #include "../consensus/params.h"
-#include "../powerblockcoin_cJSON.h"
+#include "../smartusd_cJSON.h"
 #include "../notaries_staked.h"
 #include "../net_processing.h"
 #include "../policy/policy.h"
@@ -82,7 +82,7 @@ Details.
 #include <boost/foreach.hpp>
 
 extern std::string CCerror;
-//extern int32_t POWERBLOCKCOIN_CONNECTING;
+//extern int32_t SMARTUSD_CONNECTING;
 extern std::string ASSETCHAINS_CCLIB;
 extern std::map <std::int8_t, int32_t> mapHeightEvalActivate;
 extern uint8_t ASSETCHAINS_CCDISABLES[256];

@@ -62,7 +62,7 @@ int64_t IsMarmaravout(struct CCcontract_info *cp,const CTransaction& tx,int32_t 
 int32_t MarmaraRandomize(uint32_t ind)
 {
     uint64_t val64; uint32_t val,range = (MARMARA_MAXLOCK - MARMARA_MINLOCK);
-    val64 = powerblockcoin_block_prg(ind);
+    val64 = smartusd_block_prg(ind);
     val = (uint32_t)(val64 >> 32);
     val ^= (uint32_t)val64;
     return((val % range) + MARMARA_MINLOCK);

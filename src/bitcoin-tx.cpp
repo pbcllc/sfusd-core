@@ -55,10 +55,10 @@ static int AppInitRawTx(int argc, char* argv[])
     if (argc<2 || gArgs.IsArgSet("-?") || gArgs.IsArgSet("-h") || gArgs.IsArgSet("-help"))
     {
         // First part of help message is specific to this utility
-        std::string strUsage = strprintf(_("%s powerblockcoin-tx utility version"), _(PACKAGE_NAME)) + " " + FormatFullVersion() + "\n\n" +
+        std::string strUsage = strprintf(_("%s smartusd-tx utility version"), _(PACKAGE_NAME)) + " " + FormatFullVersion() + "\n\n" +
             _("Usage:") + "\n" +
-              "  powerblockcoin-tx [options] <hex-tx> [commands]  " + _("Update hex-encoded powerblockcoin transaction") + "\n" +
-              "  powerblockcoin-tx [options] -create [commands]   " + _("Create hex-encoded powerblockcoin transaction") + "\n" +
+              "  smartusd-tx [options] <hex-tx> [commands]  " + _("Update hex-encoded smartusd transaction") + "\n" +
+              "  smartusd-tx [options] -create [commands]   " + _("Create hex-encoded smartusd transaction") + "\n" +
               "\n";
 
         fprintf(stdout, "%s", strUsage.c_str());

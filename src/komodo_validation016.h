@@ -721,7 +721,7 @@ bits256 bits256_doublesha256(char *deprecated,uint8_t *data,int32_t datalen)
 // }
 
 /* 
-// already defined in validation.cpp in PowerBlockCoin
+// already defined in validation.cpp in SmartUSD
 int32_t iguana_rwbignum(int32_t rwflag,uint8_t *serialized,int32_t len,uint8_t *endianedp)
 {
     int32_t i;
@@ -893,7 +893,7 @@ bool Getscriptaddress(char *destaddr,const CScript &scriptPubKey)
 } */
 
 /*
-// alderady exists in powerblockcoin.cpp
+// alderady exists in smartusd.cpp
 bool pubkey2addr(char *destaddr,uint8_t *pubkey33)
 {
     std::vector<uint8_t>pk; int32_t i;
@@ -909,7 +909,7 @@ struct notarized_checkpoint
     int32_t nHeight,notarized_height,MoMdepth,MoMoMdepth,MoMoMoffset,kmdstarti,kmdendi;
 } *NPOINTS;
 std::string NOTARY_PUBKEY;
-extern uint8_t NOTARY_PUBKEY33[33]; // powerblockcoin.cpp
+extern uint8_t NOTARY_PUBKEY33[33]; // smartusd.cpp
 uint256 NOTARIZED_HASH,NOTARIZED_DESTTXID,NOTARIZED_MOM;
 int32_t NUM_NPOINTS,last_NPOINTSi,NOTARIZED_HEIGHT,NOTARIZED_MOMDEPTH,KOMODO_NEEDPUBKEYS;
 portable_mutex_t komodo_mutex;

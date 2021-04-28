@@ -1,15 +1,15 @@
-Power Block Coin Core integration/staging tree
+SmartUSD Core integration/staging tree
 =====================================
 
-[![Build Status](https://travis-ci.org/pbcllc/powerblockcoin-core.svg?branch=master)](https://travis-ci.org/pbcllc/powerblockcoin-core)
+[![Build Status](https://travis-ci.org/pbcllc/smartusd-core.svg?branch=master)](https://travis-ci.org/pbcllc/smartusd-core)
 
-https://powerblockcoin.com
+https://powerblockcoin.com/
 
 Official Blockexplorer: https://explorer.pbc.kmd.sh/
 
 Visit the [RPC Interface documentation](https://developers.komodoplatform.com/basic-docs/smart-chains/smart-chain-api/address.html#getaddressbalance) for detailed information. 
 
-What is Power Block Coin? 
+What is SmartUSD? 
 ----------------
 
 
@@ -26,15 +26,15 @@ What can it be used for?
 License
 -------
 
-Power Block Coin Core is released under the terms of the MIT license. See [COPYING](COPYING) for more
+SmartUSD Core is released under the terms of the MIT license. See [COPYING](COPYING) for more
 information or see https://opensource.org/licenses/MIT.
 
 Development Process
 -------------------
 
 The `master` branch is regularly built and tested, but is not guaranteed to be
-completely stable. [Tags](https://github.com/pbcllc/powerblockcoin-core/tags) are created
-regularly to indicate new official, stable release versions of Power Block Coin Core.
+completely stable. [Tags](https://github.com/pbcllc/smartusd-core/tags) are created
+regularly to indicate new official, stable release versions of SmartUSD Core.
 
 The contribution workflow is described in [CONTRIBUTING.md](CONTRIBUTING.md).
 
@@ -73,7 +73,7 @@ not straightforward.
 Translations
 ------------
 
-**Translation workflow is not yet set up for Power Block Coin Core.  For strings which are common to Bitcoin Core, see below.**
+**Translation workflow is not yet set up for SmartUSD Core.  For strings which are common to Bitcoin Core, see below.**
 
 Changes to translations as well as new translations can be submitted to
 [Bitcoin Core's Transifex page](https://www.transifex.com/projects/p/bitcoin/).
