@@ -27,7 +27,7 @@
 #define EVAL_MARMARA 0xef
 
 extern uint8_t ASSETCHAINS_MARMARA;
-extern uint64_t powerblockcoin_block_prg(uint32_t nHeight);
+extern uint64_t smartusd_block_prg(uint32_t nHeight);
 int32_t MarmaraGetcreatetxid(uint256 &createtxid,uint256 txid);
 int32_t MarmaraGetbatontxid(std::vector<uint256> &creditloop,uint256 &batontxid,uint256 txid);
 UniValue MarmaraCreditloop(uint256 txid);

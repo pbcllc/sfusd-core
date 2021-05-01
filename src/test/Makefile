@@ -1,6 +1,6 @@
 all:
-	$(MAKE) -C .. powerblockcoin_test
+	$(MAKE) -C .. smartusd_test
 clean:
-	$(MAKE) -C .. powerblockcoin_test_clean
+	$(MAKE) -C .. smartusd_test_clean
 check:
-	$(MAKE) -C .. powerblockcoin_test_check
+	$(MAKE) -C .. smartusd_test_check

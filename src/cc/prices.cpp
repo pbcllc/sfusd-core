@@ -61,7 +61,7 @@ Restart the daemon with -earlytxid=<txid of opreturn_burn transaction>  eg:
 mine the chain past block 100, preventing anyone else, creating another payments plan on chain before block 100. 
 
 We call the following in Validation and RPC where the address is needed. 
-if ( ASSETCHAINS_EARLYTXIDCONTRACT == EVAL_PRICES && POWERBLOCKCOIN_EARLYTXID_SCRIPTPUB.size() == 0 )
+if ( ASSETCHAINS_EARLYTXIDCONTRACT == EVAL_PRICES && SMARTUSD_EARLYTXID_SCRIPTPUB.size() == 0 )
     GetKomodoEarlytxidScriptPub();
 
 This will fetch the op_return, calculate the scriptPubKey and save it to the global. 
@@ -112,7 +112,7 @@ int32_t priceind(const char *symbol)
     char name[65]; int32_t i,n = (int32_t)(cbopretsize(ASSETCHAINS_CBOPRET) / sizeof(uint32_t));
     for (i=1; i<n; i++)
     {
-        powerblockcoin_pricename(name,i);
+        smartusd_pricename(name,i);
         if ( strcmp(name,symbol) == 0 )
             return(i);
     }
@@ -123,7 +123,7 @@ int32_t priceget(int64_t *buf64,int32_t ind,int32_t height,int32_t numblocks)
 {
     FILE *fp; int32_t retval = PRICES_MAXDATAPOINTS;
     pthread_mutex_lock(&pricemutex);
-    if ( ind < POWERBLOCKCOIN_MAXPRICES && (fp= PRICES[ind].fp) != 0 )
+    if ( ind < SMARTUSD_MAXPRICES && (fp= PRICES[ind].fp) != 0 )
     {
         fseek(fp,height * PRICES_MAXDATAPOINTS * sizeof(int64_t),SEEK_SET);
         if ( fread(buf64,sizeof(int64_t),numblocks*PRICES_MAXDATAPOINTS,fp) != numblocks*PRICES_MAXDATAPOINTS )
@@ -296,7 +296,7 @@ static bool ValidateBetTx(struct CCcontract_info *cp, Eval *eval, const CTransac
 
     // check payment cc config:
 //We haven't early txid contracts
-//    if ( ASSETCHAINS_EARLYTXIDCONTRACT == EVAL_PRICES && POWERBLOCKCOIN_EARLYTXID_SCRIPTPUB.size() == 0 )
+//    if ( ASSETCHAINS_EARLYTXIDCONTRACT == EVAL_PRICES && SMARTUSD_EARLYTXID_SCRIPTPUB.size() == 0 )
 //        GetKomodoEarlytxidScriptPub();
 
     if (bettx.vout.size() < 6 || bettx.vout.size() > 7)
@@ -315,7 +315,7 @@ static bool ValidateBetTx(struct CCcontract_info *cp, Eval *eval, const CTransac
     if (MakeCC1vout(cp->evalcode, bettx.vout[2].nValue, pricespk) != bettx.vout[2] )
         return eval->Invalid("cannot validate vout2 in bet tx with pk from opreturn");
     // This should be all you need to verify it, maybe also check amount? 
-    if ( bettx.vout[4].scriptPubKey != POWERBLOCKCOIN_EARLYTXID_SCRIPTPUB )
+    if ( bettx.vout[4].scriptPubKey != SMARTUSD_EARLYTXID_SCRIPTPUB )
         return eval->Invalid("the fee was paid to wrong address.");
 
     int64_t betamount = bettx.vout[2].nValue;
@@ -350,7 +350,7 @@ static bool ValidateAddFundingTx(struct CCcontract_info *cp, Eval *eval, const C
 
     // check payment cc config:
 //We haven't early txid contracts
-//    if (ASSETCHAINS_EARLYTXIDCONTRACT == EVAL_PRICES && POWERBLOCKCOIN_EARLYTXID_SCRIPTPUB.size() == 0)
+//    if (ASSETCHAINS_EARLYTXIDCONTRACT == EVAL_PRICES && SMARTUSD_EARLYTXID_SCRIPTPUB.size() == 0)
 //        GetKomodoEarlytxidScriptPub();
 
     if (addfundingtx.vout.size() < 4 || addfundingtx.vout.size() > 5)
@@ -376,7 +376,7 @@ static bool ValidateAddFundingTx(struct CCcontract_info *cp, Eval *eval, const C
         return eval->Invalid("cannot validate vout1 in add funding tx with global pk");
 
     // This should be all you need to verify it, maybe also check amount? 
-    if (addfundingtx.vout[2].scriptPubKey != POWERBLOCKCOIN_EARLYTXID_SCRIPTPUB)
+    if (addfundingtx.vout[2].scriptPubKey != SMARTUSD_EARLYTXID_SCRIPTPUB)
         return eval->Invalid("the fee was paid to wrong address.");
 
     int64_t betamount = addfundingtx.vout[1].nValue;
@@ -711,12 +711,12 @@ static std::string prices_getsourceexpression(const std::vector<uint16_t> &vec) 
         char name[65];
         std::string operand;
         uint16_t opcode = vec[i];
-        int32_t value = (opcode & (POWERBLOCKCOIN_MAXPRICES - 1));   // index or weight 
+        int32_t value = (opcode & (SMARTUSD_MAXPRICES - 1));   // index or weight 
 
-        switch (opcode & POWERBLOCKCOIN_PRICEMASK)
+        switch (opcode & SMARTUSD_PRICEMASK)
         {
         case 0: // indices 
-            powerblockcoin_pricename(name, value);
+            smartusd_pricename(name, value);
             operand = std::string(name);
             break;
 
@@ -988,7 +988,7 @@ int32_t prices_syntheticvec(std::vector<uint16_t> &vec, std::vector<std::string>
             opcode = PRICES_DDD, need = 3;
         else if (!is_weight_str(opstr) && (ind = priceind(opstr.c_str())) >= 0)
             opcode = ind, need = 0;
-        else if ((weight = atoi(opstr.c_str())) > 0 && weight < POWERBLOCKCOIN_MAXPRICES)
+        else if ((weight = atoi(opstr.c_str())) > 0 && weight < SMARTUSD_MAXPRICES)
         {
             opcode = PRICES_WEIGHT | weight;
             need = 1;
@@ -1003,7 +1003,7 @@ int32_t prices_syntheticvec(std::vector<uint16_t> &vec, std::vector<std::string>
         }
         depth -= need;
         ///std::cerr << "prices_syntheticvec() opcode=" << opcode << " opstr=" << opstr << " need=" << need << " depth=" << depth << std::endl;
-        if ((opcode & POWERBLOCKCOIN_PRICEMASK) != PRICES_WEIGHT) { // skip weight
+        if ((opcode & SMARTUSD_PRICEMASK) != PRICES_WEIGHT) { // skip weight
             depth++;                                          // increase operands count
             ///std::cerr << "depth++=" << depth << std::endl;
         }
@@ -1047,12 +1047,12 @@ int64_t prices_syntheticprice(std::vector<uint16_t> vec, int32_t height, int32_t
     for (i = 0; i < vec.size(); i++)
     {
         opcode = vec[i];
-        value = (opcode & (POWERBLOCKCOIN_MAXPRICES - 1));   // index or weight 
+        value = (opcode & (SMARTUSD_MAXPRICES - 1));   // index or weight 
 
         mpz_set_ui(mpzResult, 0);  // clear result to test overflow (see below)
 
         //std::cerr << "prices_syntheticprice" << " i=" << i << " mpzTotalPrice=" << mpz_get_si(mpzTotalPrice) << " value=" << value << " depth=" << depth <<  " opcode&KOMODO_PRICEMASK=" << (opcode & KOMODO_PRICEMASK) <<std::endl;
-        switch (opcode & POWERBLOCKCOIN_PRICEMASK)
+        switch (opcode & SMARTUSD_PRICEMASK)
         {
         case 0: // indices 
             pricestack[depth] = 0;
@@ -1509,7 +1509,7 @@ int64_t prices_enumaddedbets(uint256 &batontxid, std::vector<OneBetData> &bets, 
 // pricesbet rpc impl: make betting tx
 UniValue PricesBet(int64_t txfee, int64_t amount, int16_t leverage, std::vector<std::string> synthetic)
 {
-    int32_t nextheight = powerblockcoin_nextheight();
+    int32_t nextheight = smartusd_nextheight();
     CMutableTransaction mtx = CreateNewContextualCMutableTransaction(); UniValue result(UniValue::VOBJ);
     struct CCcontract_info *cp, C; 
     CPubKey pricespk, mypk; 
@@ -1560,14 +1560,14 @@ UniValue PricesBet(int64_t txfee, int64_t amount, int16_t leverage, std::vector<
         mtx.vout.push_back(MakeCC1vout(cp->evalcode, betamount, pricespk));                         // vout2 betamount
         mtx.vout.push_back(CTxOut(txfee, CScript() << ParseHex(HexStr(pricespk)) << OP_CHECKSIG));  // vout3 normal marker NVOUT_NORMALMARKER - TODO: remove it as we have cc marker now, when move to the new chain
 //We haven't early txid contracts
-//        if ( ASSETCHAINS_EARLYTXIDCONTRACT == EVAL_PRICES && POWERBLOCKCOIN_EARLYTXID_SCRIPTPUB.size() == 0 )
+//        if ( ASSETCHAINS_EARLYTXIDCONTRACT == EVAL_PRICES && SMARTUSD_EARLYTXID_SCRIPTPUB.size() == 0 )
 //        {
             // Lock here, as in validation we cannot call lock in the function itself.
             // may not be needed as the validation call to update the global, is called in a LOCK already, and it can only update there and here.
 //            LOCK(cs_main);
 //            GetKomodoEarlytxidScriptPub();
 //        }
-        mtx.vout.push_back(CTxOut(amount-betamount, POWERBLOCKCOIN_EARLYTXID_SCRIPTPUB)); 
+        mtx.vout.push_back(CTxOut(amount-betamount, SMARTUSD_EARLYTXID_SCRIPTPUB)); 
         //test: mtx.vout.push_back(CTxOut(amount - betamount, CScript() << ParseHex("037c803ec82d12da939ac04379bbc1130a9065c53d8244a61eece1db942cf0efa7") << OP_CHECKSIG));  // vout4 test revshare fee
 
         rawtx = FinalizeCCTx(0, cp, mtx, mypk, txfee, prices_betopret(mypk, nextheight - 1, amount, leverage, firstprice, vec, zeroid));
@@ -1581,7 +1581,7 @@ UniValue PricesBet(int64_t txfee, int64_t amount, int16_t leverage, std::vector<
 // pricesaddfunding rpc impl: add yet another bet
 UniValue PricesAddFunding(int64_t txfee, uint256 bettxid, int64_t amount)
 {
-    int32_t nextheight = powerblockcoin_nextheight();
+    int32_t nextheight = smartusd_nextheight();
     CMutableTransaction mtx = CreateNewContextualCMutableTransaction(); UniValue result(UniValue::VOBJ);
     struct CCcontract_info *cp, C; 
     CTransaction bettx; 
@@ -1631,14 +1631,14 @@ UniValue PricesAddFunding(int64_t txfee, uint256 bettxid, int64_t amount)
             mtx.vout.push_back(MakeCC1vout(cp->evalcode, txfee, mypk));         // vout0 baton for total funding
             mtx.vout.push_back(MakeCC1vout(cp->evalcode, betamount, pricespk));    // vout1 added amount
 //We haven't early txid contracts
-//            if (ASSETCHAINS_EARLYTXIDCONTRACT == EVAL_PRICES && POWERBLOCKCOIN_EARLYTXID_SCRIPTPUB.size() == 0)
+//            if (ASSETCHAINS_EARLYTXIDCONTRACT == EVAL_PRICES && SMARTUSD_EARLYTXID_SCRIPTPUB.size() == 0)
 //            {
                 // Lock here, as in validation we cannot call lock in the function itself.
                 // may not be needed as the validation call to update the global, is called in a LOCK already, and it can only update there and here.
 //                LOCK(cs_main);
 //                GetKomodoEarlytxidScriptPub();
 //            }
-            mtx.vout.push_back(CTxOut(amount - betamount, POWERBLOCKCOIN_EARLYTXID_SCRIPTPUB));
+            mtx.vout.push_back(CTxOut(amount - betamount, SMARTUSD_EARLYTXID_SCRIPTPUB));
             // test: mtx.vout.push_back(CTxOut(amount - betamount, CScript() << ParseHex("037c803ec82d12da939ac04379bbc1130a9065c53d8244a61eece1db942cf0efa7") << OP_CHECKSIG));  //vout2  test revshare fee
 
             rawtx = FinalizeCCTx(0, cp, mtx, mypk, txfee, prices_addopret(bettxid, mypk, amount));
@@ -1701,7 +1701,7 @@ int32_t prices_scanchain(std::vector<OneBetData> &bets, int16_t leverage, std::v
 // pricescostbasis rpc impl: set cost basis (open price) for the bet (deprecated)
 UniValue PricesSetcostbasis(int64_t txfee, uint256 bettxid)
 {
-    int32_t nextheight = powerblockcoin_nextheight();
+    int32_t nextheight = smartusd_nextheight();
     CMutableTransaction mtx = CreateNewContextualCMutableTransaction();
     UniValue result(UniValue::VOBJ);
     struct CCcontract_info *cp, C; CTransaction bettx; uint256 hashBlock, batontxid, tokenid;
@@ -1773,7 +1773,7 @@ UniValue PricesSetcostbasis(int64_t txfee, uint256 bettxid)
 // pricesaddfunding rpc impl: add yet another bet
 UniValue PricesRefillFund(int64_t amount)
 {
-    int32_t nextheight = powerblockcoin_nextheight();
+    int32_t nextheight = smartusd_nextheight();
     CMutableTransaction mtx = CreateNewContextualCMutableTransaction(); UniValue result(UniValue::VOBJ);
     struct CCcontract_info *cp, C;
     CPubKey pricespk, mypk, pk;
@@ -1940,7 +1940,7 @@ int32_t prices_getbetinfo(uint256 bettxid, BetInfo &betinfo)
 // pricesrekt rpc: anyone can rekt a bet at some block where losses reached limit, collecting fee
 UniValue PricesRekt(int64_t txfee, uint256 bettxid, int32_t rektheight)
 {
-    int32_t nextheight = powerblockcoin_nextheight();
+    int32_t nextheight = smartusd_nextheight();
     CMutableTransaction mtx = CreateNewContextualCMutableTransaction(); UniValue result(UniValue::VOBJ);
     struct CCcontract_info *cp, C; 
     CTransaction bettx; 
@@ -2054,7 +2054,7 @@ UniValue PricesRekt(int64_t txfee, uint256 bettxid, int32_t rektheight)
 // pricescashout rpc impl: bettor can cashout hit bet if it is not rekt
 UniValue PricesCashout(int64_t txfee, uint256 bettxid)
 {
-    int32_t nextheight = powerblockcoin_nextheight();
+    int32_t nextheight = smartusd_nextheight();
     CMutableTransaction mtx = CreateNewContextualCMutableTransaction(); 
     UniValue result(UniValue::VOBJ);
     struct CCcontract_info *cp, C; char destaddr[64]; 
@@ -2283,16 +2283,16 @@ static bool prices_ispositionup(const std::vector<uint16_t> &vecparsed, int16_t 
     if (vecparsed.size() > 1 && vecparsed.size() <= 3) {
         uint16_t opcode = vecparsed[0];
 
-        int32_t value = (opcode & (POWERBLOCKCOIN_MAXPRICES - 1));   // filter index or weight = opcode & (2048-1)
+        int32_t value = (opcode & (SMARTUSD_MAXPRICES - 1));   // filter index or weight = opcode & (2048-1)
 
-        if ((opcode & POWERBLOCKCOIN_PRICEMASK) == 0) {
+        if ((opcode & SMARTUSD_PRICEMASK) == 0) {
             char name[65];
-            if (powerblockcoin_pricename(name, value)) {
+            if (smartusd_pricename(name, value)) {
                 std::string upperquote, bottomquote;
                 prices_splitpair(std::string(name), upperquote, bottomquote);
                 
                 uint16_t opcode1 = vecparsed[1];
-                bool isInverted = ((opcode1 & POWERBLOCKCOIN_PRICEMASK) == PRICES_INV);
+                bool isInverted = ((opcode1 & SMARTUSD_PRICEMASK) == PRICES_INV);
 
                 //std::cerr << "prices_ispositionup upperquote=" << upperquote << " bottomquote=" << bottomquote << " opcode1=" << opcode1 << " (opcode1 & KOMODO_PRICEMASK)=" << (opcode1 & KOMODO_PRICEMASK) << std::endl;
 
@@ -2332,13 +2332,13 @@ static bool prices_isopposite(BetInfo p1, BetInfo p2) {
         uint16_t opcode1 = p1.vecparsed[0];
         uint16_t opcode2 = p2.vecparsed[0];
 
-        int32_t value1 = (opcode1 & (POWERBLOCKCOIN_MAXPRICES - 1));   // index or weight 
-        int32_t value2 = (opcode2 & (POWERBLOCKCOIN_MAXPRICES - 1));   // index or weight 
+        int32_t value1 = (opcode1 & (SMARTUSD_MAXPRICES - 1));   // index or weight 
+        int32_t value2 = (opcode2 & (SMARTUSD_MAXPRICES - 1));   // index or weight 
 
-        if ( (opcode1 & POWERBLOCKCOIN_PRICEMASK) == 0 && (opcode2 & POWERBLOCKCOIN_PRICEMASK) == 0 ) {
+        if ( (opcode1 & SMARTUSD_PRICEMASK) == 0 && (opcode2 & SMARTUSD_PRICEMASK) == 0 ) {
             char name1[65];
             char name2[65];
-            if (powerblockcoin_pricename(name1, value1) && powerblockcoin_pricename(name2, value2)) {
+            if (smartusd_pricename(name1, value1) && smartusd_pricename(name2, value2)) {
 
                 uint16_t opcode1 = p1.vecparsed[1];
                 uint16_t opcode2 = p2.vecparsed[1];
@@ -2347,8 +2347,8 @@ static bool prices_isopposite(BetInfo p1, BetInfo p2) {
                 prices_splitpair(std::string(name1), upperquote1, bottomquote1);
                 prices_splitpair(std::string(name2), upperquote2, bottomquote2);
 
-                bool isInverted1 = ((opcode1 & POWERBLOCKCOIN_PRICEMASK) != PRICES_INV);
-                bool isInverted2 = ((opcode2 & POWERBLOCKCOIN_PRICEMASK) != PRICES_INV);
+                bool isInverted1 = ((opcode1 & SMARTUSD_PRICEMASK) != PRICES_INV);
+                bool isInverted2 = ((opcode2 & SMARTUSD_PRICEMASK) != PRICES_INV);
 
                 if (/*upperquote1 == bottomquote2 && bottomquote1 == upperquote2 && (p1.leverage > 0 == p2.leverage > 0 || (opcode1 & KOMODO_PRICEMASK) == PRICES_INV == (opcode2 & KOMODO_PRICEMASK) == PRICES_INV) ||*/
                     upperquote1 == upperquote2 && bottomquote1 == bottomquote2 && ((p1.leverage > 0) != (p2.leverage > 0) || isInverted1 != isInverted2) )
@@ -2366,11 +2366,11 @@ static std::string findMatchedBook(const std::vector<uint16_t> &vecparsed, const
     if (vecparsed.size() > 1 && vecparsed.size() <= 3) {
         uint16_t opcode = vecparsed[0];
 
-        int32_t value = (opcode & (POWERBLOCKCOIN_MAXPRICES - 1));   // filter index or weight = opcode & (2048-1)
+        int32_t value = (opcode & (SMARTUSD_MAXPRICES - 1));   // filter index or weight = opcode & (2048-1)
 
-        if ((opcode & POWERBLOCKCOIN_PRICEMASK) == 0) {
+        if ((opcode & SMARTUSD_PRICEMASK) == 0) {
             char name[65];
-            if (powerblockcoin_pricename(name, value)) {
+            if (smartusd_pricename(name, value)) {
                 auto it = bookmatched.find(std::string(name));
                 if (it != bookmatched.end())
                     return it->first;
@@ -2425,7 +2425,7 @@ void prices_getorderbook(std::map<std::string, std::vector<BetInfo> > & bookmatc
 
             if (book[0].vecparsed.size() <= 3) {   // only short expr check for match: "BTC_USD,1" or "BTC_USD,!,1"
                 char name[65];
-                powerblockcoin_pricename(name, (book[0].vecparsed[0] & (POWERBLOCKCOIN_MAXPRICES - 1)));
+                smartusd_pricename(name, (book[0].vecparsed[0] & (SMARTUSD_MAXPRICES - 1)));
                 std::string sname = name;
                 bookmatched[sname].push_back(book[0]);
 

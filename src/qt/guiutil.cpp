@@ -76,7 +76,7 @@ extern double NSAppKitVersionNumber;
 #endif
 #endif
 
-#define URI_SCHEME "powerblockcoin"
+#define URI_SCHEME "smartusd"
 
 namespace GUIUtil {
 
@@ -131,7 +131,7 @@ void setupAddressWidget(QValidatedLineEdit *widget, QWidget *parent)
 #if QT_VERSION >= 0x040700
     // We don't want translators to use own addresses in translations
     // and this is the only place, where this address is supplied.
-    widget->setPlaceholderText(QObject::tr("Enter a PowerBlockCoin address (e.g. %1)").arg(
+    widget->setPlaceholderText(QObject::tr("Enter a SmartUSD address (e.g. %1)").arg(
         QString::fromStdString(DummyAddress(Params()))));
 #endif
     widget->setValidator(new BitcoinAddressEntryValidator(parent));
@@ -619,10 +619,10 @@ fs::path static StartupShortcutPath()
 {
     std::string chain = ChainNameFromCommandLine();
     if (chain == CBaseChainParams::MAIN)
-        return GetSpecialFolderPath(CSIDL_STARTUP) / "PowerBlockCoin.lnk";
+        return GetSpecialFolderPath(CSIDL_STARTUP) / "SmartUSD.lnk";
     if (chain == CBaseChainParams::TESTNET) // Remove this special case when CBaseChainParams::TESTNET = "testnet4"
-        return GetSpecialFolderPath(CSIDL_STARTUP) / "PowerBlockCoin (testnet).lnk";
-    return GetSpecialFolderPath(CSIDL_STARTUP) / strprintf("PowerBlockCoin (%s).lnk", chain);
+        return GetSpecialFolderPath(CSIDL_STARTUP) / "SmartUSD (testnet).lnk";
+    return GetSpecialFolderPath(CSIDL_STARTUP) / strprintf("SmartUSD (%s).lnk", chain);
 }
 
 bool GetStartOnSystemStartup()
@@ -717,8 +717,8 @@ fs::path static GetAutostartFilePath()
 {
     std::string chain = ChainNameFromCommandLine();
     if (chain == CBaseChainParams::MAIN)
-        return GetAutostartDir() / "powerblockcoin.desktop";
-    return GetAutostartDir() / strprintf("powerblockcoin-%s.lnk", chain);
+        return GetAutostartDir() / "smartusd.desktop";
+    return GetAutostartDir() / strprintf("smartusd-%s.lnk", chain);
 }
 
 bool GetStartOnSystemStartup()
@@ -762,9 +762,9 @@ bool SetStartOnSystemStartup(bool fAutoStart)
         optionFile << "[Desktop Entry]\n";
         optionFile << "Type=Application\n";
         if (chain == CBaseChainParams::MAIN)
-            optionFile << "Name=PowerBlockCoin\n";
+            optionFile << "Name=SmartUSD\n";
         else
-            optionFile << strprintf("Name=PowerBlockCoin (%s)\n", chain);
+            optionFile << strprintf("Name=SmartUSD (%s)\n", chain);
         optionFile << "Exec=" << pszExePath << strprintf(" -min -testnet=%d -regtest=%d\n", gArgs.GetBoolArg("-testnet", false), gArgs.GetBoolArg("-regtest", false));
         optionFile << "Terminal=false\n";
         optionFile << "Hidden=false\n";

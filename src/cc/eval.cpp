@@ -171,7 +171,7 @@ extern int32_t komodo_notaries(uint8_t pubkeys[64][33],int32_t height,uint32_t t
 
 int32_t Eval::GetNotaries(uint8_t pubkeys[64][33], int32_t height, uint32_t timestamp) const
 {
-    return powerblockcoin_notaries(pubkeys, height, timestamp);
+    return smartusd_notaries(pubkeys, height, timestamp);
 }
 
 

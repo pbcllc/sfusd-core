@@ -1,6 +1,6 @@
 all:
-	$(MAKE) -C ../../ test_powerblockcoin_qt
+	$(MAKE) -C ../../ test_smartusd_qt
 clean:
-	$(MAKE) -C ../../ test_powerblockcoin_qt_clean
+	$(MAKE) -C ../../ test_smartusd_qt_clean
 check:
-	$(MAKE) -C ../../ test_powerblockcoin_qt_check
+	$(MAKE) -C ../../ test_smartusd_qt_check

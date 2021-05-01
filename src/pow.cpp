@@ -20,7 +20,7 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
     {
         if (params.AllowMinDifficultyBlocks(pblock->GetBlockTime()))
         {
-            /* khal's port of this code from Bitcoin to the old powerblockcoind
+            /* khal's port of this code from Bitcoin to the old smartusdd
                has a bug:  Comparison of block times is done by an unsigned
                difference.  Consequently, the minimum difficulty is also
                applied if the block's timestamp is earlier than the preceding
@@ -46,7 +46,7 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
     }
 
     /* Adapt the retargeting interval after merge-mining start
-       according to the changed PowerBlockCoin rules.  */
+       according to the changed SmartUSD rules.  */
     int nBlocksBack = params.DifficultyAdjustmentInterval() - 1;
     if (pindexLast->nHeight >= params.nAuxpowStartHeight
         && (pindexLast->nHeight + 1 > params.DifficultyAdjustmentInterval()))

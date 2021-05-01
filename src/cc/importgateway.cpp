@@ -25,7 +25,7 @@
 #define KMD_TADDR 0
 #define CC_MARKER_VALUE 10000
 
-extern uint256 POWERBLOCKCOIN_EARLYTXID;
+extern uint256 SMARTUSD_EARLYTXID;
 
 CScript EncodeImportGatewayBindOpRet(uint8_t funcid,std::string coin,uint256 oracletxid,uint8_t M,uint8_t N,std::vector<CPubKey> importgatewaypubkeys,uint8_t taddr,uint8_t prefix,uint8_t prefix2,uint8_t wiftype)
 {
@@ -568,9 +568,9 @@ std::string ImportGatewayDeposit(uint64_t txfee,uint256 bindtxid,int32_t height,
     int32_t i,m,n,numvouts; uint8_t M,N,taddr,prefix,prefix2,wiftype; std::string coin; struct CCcontract_info *cp,C;
     std::vector<CPubKey> pubkeys,publishers; std::vector<uint256> txids; char str[128],burnaddr[64];
 
-    if (POWERBLOCKCOIN_EARLYTXID!=zeroid && bindtxid!=POWERBLOCKCOIN_EARLYTXID)
+    if (SMARTUSD_EARLYTXID!=zeroid && bindtxid!=SMARTUSD_EARLYTXID)
     {
-        CCerror = strprintf("invalid import gateway. On this chain only valid import gateway is %s",POWERBLOCKCOIN_EARLYTXID.GetHex());
+        CCerror = strprintf("invalid import gateway. On this chain only valid import gateway is %s",SMARTUSD_EARLYTXID.GetHex());
         LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
         return("");
     }
@@ -647,9 +647,9 @@ std::string ImportGatewayWithdraw(uint64_t txfee,uint256 bindtxid,std::string re
     std::vector<CPubKey> msigpubkeys; char burnaddr[64],str[65],coinaddr[64]; struct CCcontract_info *cp,C;
     std::vector<std::pair<CAddressUnspentKey, CAddressUnspentValue> > unspentOutputs;
 
-    if (POWERBLOCKCOIN_EARLYTXID!=zeroid && bindtxid!=POWERBLOCKCOIN_EARLYTXID)
+    if (SMARTUSD_EARLYTXID!=zeroid && bindtxid!=SMARTUSD_EARLYTXID)
     {
-        CCerror = strprintf("invalid import gateway. On this chain only valid import gateway is %s",POWERBLOCKCOIN_EARLYTXID.GetHex());
+        CCerror = strprintf("invalid import gateway. On this chain only valid import gateway is %s",SMARTUSD_EARLYTXID.GetHex());
         LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
         return("");
     }
@@ -746,9 +746,9 @@ std::string ImportGatewayPartialSign(uint64_t txfee,uint256 lasttxid,std::string
             LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
             return("");
         }
-        else if (POWERBLOCKCOIN_EARLYTXID!=zeroid && bindtxid!=POWERBLOCKCOIN_EARLYTXID)
+        else if (SMARTUSD_EARLYTXID!=zeroid && bindtxid!=SMARTUSD_EARLYTXID)
         {
-            CCerror = strprintf("invalid import gateway. On this chain only valid import gateway is %s",POWERBLOCKCOIN_EARLYTXID.GetHex());
+            CCerror = strprintf("invalid import gateway. On this chain only valid import gateway is %s",SMARTUSD_EARLYTXID.GetHex());
             LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
             return("");
         }
@@ -793,9 +793,9 @@ std::string ImportGatewayPartialSign(uint64_t txfee,uint256 lasttxid,std::string
             LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
             return("");
         }
-        else if (POWERBLOCKCOIN_EARLYTXID!=zeroid && bindtxid!=POWERBLOCKCOIN_EARLYTXID)
+        else if (SMARTUSD_EARLYTXID!=zeroid && bindtxid!=SMARTUSD_EARLYTXID)
         {
-            CCerror = strprintf("invalid import gateway. On this chain only valid import gateway is %s",POWERBLOCKCOIN_EARLYTXID.GetHex());
+            CCerror = strprintf("invalid import gateway. On this chain only valid import gateway is %s",SMARTUSD_EARLYTXID.GetHex());
             LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
             return("");
         }
@@ -864,9 +864,9 @@ std::string ImportGatewayCompleteSigning(uint64_t txfee,uint256 lasttxid,std::st
             LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
             return("");
         }
-        else if (POWERBLOCKCOIN_EARLYTXID!=zeroid && bindtxid!=POWERBLOCKCOIN_EARLYTXID)
+        else if (SMARTUSD_EARLYTXID!=zeroid && bindtxid!=SMARTUSD_EARLYTXID)
         {
-            CCerror = strprintf("invalid import gateway. On this chain only valid import gateway is %s",POWERBLOCKCOIN_EARLYTXID.GetHex());
+            CCerror = strprintf("invalid import gateway. On this chain only valid import gateway is %s",SMARTUSD_EARLYTXID.GetHex());
             LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
             return("");
         }
@@ -910,9 +910,9 @@ std::string ImportGatewayCompleteSigning(uint64_t txfee,uint256 lasttxid,std::st
             LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
             return("");
         }
-        else if (POWERBLOCKCOIN_EARLYTXID!=zeroid && bindtxid!=POWERBLOCKCOIN_EARLYTXID)
+        else if (SMARTUSD_EARLYTXID!=zeroid && bindtxid!=SMARTUSD_EARLYTXID)
         {
-            CCerror = strprintf("invalid import gateway. On this chain only valid import gateway is %s",POWERBLOCKCOIN_EARLYTXID.GetHex());
+            CCerror = strprintf("invalid import gateway. On this chain only valid import gateway is %s",SMARTUSD_EARLYTXID.GetHex());
             LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
             return("");
         }
@@ -988,9 +988,9 @@ std::string ImportGatewayMarkDone(uint64_t txfee,uint256 completetxid,std::strin
         LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
         return("");
     }
-    else if (POWERBLOCKCOIN_EARLYTXID!=zeroid && bindtxid!=POWERBLOCKCOIN_EARLYTXID)
+    else if (SMARTUSD_EARLYTXID!=zeroid && bindtxid!=SMARTUSD_EARLYTXID)
     {
-        CCerror = strprintf("invalid import gateway. On this chain only valid import gateway is %s",POWERBLOCKCOIN_EARLYTXID.GetHex());
+        CCerror = strprintf("invalid import gateway. On this chain only valid import gateway is %s",SMARTUSD_EARLYTXID.GetHex());
         LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
         return("");
     }
