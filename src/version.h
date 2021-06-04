@@ -9,7 +9,7 @@
  * network protocol versioning
  */
 
-static const int PROTOCOL_VERSION = 110015;
+static const int PROTOCOL_VERSION = 110016;
 
 //! initial proto version, to be increased after version/verack negotiation
 static const int INIT_PROTO_VERSION = 209;
@@ -17,8 +17,11 @@ static const int INIT_PROTO_VERSION = 209;
 //! In this version, 'getheaders' was introduced.
 static const int GETHEADERS_VERSION = 31800;
 
+//! In this version, we switched to uncompressed amount in CTxOutCompressor
+static const int UNCOMPRESSED_AMOUNTS_VERSION = 110016;
+
 //! disconnect from peers older than this proto version
-static const int MIN_PEER_PROTO_VERSION = GETHEADERS_VERSION;
+static const int MIN_PEER_PROTO_VERSION = UNCOMPRESSED_AMOUNTS_VERSION;
 
 //! nTime field added to CAddress, starting with this version;
 //! if possible, avoid requesting addresses nodes older than this
