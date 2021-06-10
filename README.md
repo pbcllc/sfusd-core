@@ -5,7 +5,7 @@ SmartUSD Core integration/staging tree
 
 https://powerblockcoin.com/
 
-Official Blockexplorer: https://explorer.pbc.kmd.sh/
+Official Blockexplorer: https://explorer.sfusd.kmd.sh/
 
 Visit the [RPC Interface documentation](https://developers.komodoplatform.com/basic-docs/smart-chains/smart-chain-api/address.html#getaddressbalance) for detailed information. 
 
