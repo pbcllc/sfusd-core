@@ -112,7 +112,7 @@ int32_t priceind(const char *symbol)
     char name[65]; int32_t i,n = (int32_t)(cbopretsize(ASSETCHAINS_CBOPRET) / sizeof(uint32_t));
     for (i=1; i<n; i++)
     {
-        smartusd_pricename(name,ARRAYSIZE(name),i);
+        smartusd_pricename(name, ARRAYSIZE(name), i);
         if ( strcmp(name,symbol) == 0 )
             return(i);
     }
@@ -716,7 +716,7 @@ static std::string prices_getsourceexpression(const std::vector<uint16_t> &vec) 
         switch (opcode & SMARTUSD_PRICEMASK)
         {
         case 0: // indices 
-            smartusd_pricename(name, value);
+            smartusd_pricename(name, ARRAYSIZE(name), value);
             operand = std::string(name);
             break;
 
@@ -2287,7 +2287,7 @@ static bool prices_ispositionup(const std::vector<uint16_t> &vecparsed, int16_t 
 
         if ((opcode & SMARTUSD_PRICEMASK) == 0) {
             char name[65];
-            if (smartusd_pricename(name, value)) {
+            if (smartusd_pricename(name, ARRAYSIZE(name), value)) {
                 std::string upperquote, bottomquote;
                 prices_splitpair(std::string(name), upperquote, bottomquote);
                 
@@ -2338,7 +2338,7 @@ static bool prices_isopposite(BetInfo p1, BetInfo p2) {
         if ( (opcode1 & SMARTUSD_PRICEMASK) == 0 && (opcode2 & SMARTUSD_PRICEMASK) == 0 ) {
             char name1[65];
             char name2[65];
-            if (smartusd_pricename(name1, value1) && smartusd_pricename(name2, value2)) {
+            if (smartusd_pricename(name1, ARRAYSIZE(name1), value1) && smartusd_pricename(name2, ARRAYSIZE(name2), value2)) {
 
                 uint16_t opcode1 = p1.vecparsed[1];
                 uint16_t opcode2 = p2.vecparsed[1];
@@ -2370,7 +2370,7 @@ static std::string findMatchedBook(const std::vector<uint16_t> &vecparsed, const
 
         if ((opcode & SMARTUSD_PRICEMASK) == 0) {
             char name[65];
-            if (smartusd_pricename(name, value)) {
+            if (smartusd_pricename(name, ARRAYSIZE(name), value)) {
                 auto it = bookmatched.find(std::string(name));
                 if (it != bookmatched.end())
                     return it->first;
@@ -2425,7 +2425,7 @@ void prices_getorderbook(std::map<std::string, std::vector<BetInfo> > & bookmatc
 
             if (book[0].vecparsed.size() <= 3) {   // only short expr check for match: "BTC_USD,1" or "BTC_USD,!,1"
                 char name[65];
-                smartusd_pricename(name, (book[0].vecparsed[0] & (SMARTUSD_MAXPRICES - 1)));
+                smartusd_pricename(name, ARRAYSIZE(name), (book[0].vecparsed[0] & (SMARTUSD_MAXPRICES - 1)));
                 std::string sname = name;
                 bookmatched[sname].push_back(book[0]);
 
