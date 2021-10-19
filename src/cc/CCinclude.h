@@ -81,6 +81,12 @@ Details.
 #include "../primitives/transaction.h"
 #include <boost/foreach.hpp>
 
+#ifndef ARRAYSIZE
+#define ARRAYSIZE(a) \
+  ((sizeof(a) / sizeof(*(a))) / \
+   static_cast<size_t>(!(sizeof(a) % sizeof(*(a)))))
+#endif
+
 extern std::string CCerror;
 //extern int32_t SMARTUSD_CONNECTING;
 extern std::string ASSETCHAINS_CCLIB;
