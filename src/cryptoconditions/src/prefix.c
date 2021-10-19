@@ -20,6 +20,7 @@
 #include "asn/OCTET_STRING.h"
 #include "include/cJSON.h"
 #include "cryptoconditions.h"
+#include "strl.h"
 
 
 struct CCType CC_PrefixType;
@@ -93,7 +94,7 @@ static uint32_t prefixSubtypes(const CC *cond) {
 static CC *prefixFromJSON(const cJSON *params, char *err) {
     cJSON *mml_item = cJSON_GetObjectItem(params, "maxMessageLength");
     if (!cJSON_IsNumber(mml_item)) {
-        strcpy(err, "maxMessageLength must be a number");
+        strlcpy(err, "maxMessageLength must be a number", MAX_ERR_LEN);
         return NULL;
     }
 

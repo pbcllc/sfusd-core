@@ -25,6 +25,7 @@
 #include "asn/asn_application.h"
 //#include "cryptoconditions.h"
 #include "internal.h"
+#include "strl.h"
 
 
 static unsigned char encoding_table[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
@@ -91,8 +92,10 @@ unsigned char *base64_decode(const unsigned char *data_,
 
     size_t input_length = strlen(data_);
     int rem = input_length % 4;
-    unsigned char *data = calloc(1,input_length + (4-rem));
-    strcpy(data, data_);
+    size_t data_size = input_length + (4-rem);
+    unsigned char *data = calloc(1,data_size);
+
+    strlcpy(data, data_, data_size);
 
     // for unpadded b64
     if (0 != rem) {
