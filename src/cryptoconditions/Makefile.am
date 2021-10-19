@@ -22,6 +22,7 @@ CRYPTOCONDITIONS_CORE=libcryptoconditions_core.la
 libcryptoconditions_core_la_SOURCES = \
 	src/cryptoconditions.c \
 	src/utils.c \
+        src/strl.c \
 	../cJSON.c \
 	src/include/sha256.c \
 	src/include/ed25519/src/keypair.c \

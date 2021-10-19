@@ -33,6 +33,38 @@ AC_TYPE_UINT64_T
 AC_TYPE_UINT8_T
 AC_CHECK_TYPES([ptrdiff_t])
 
+AC_MSG_CHECKING([for strlcpy])
+AC_RUN_IFELSE([AC_LANG_PROGRAM([[#include <string.h>]],[[
+               char a[2];
+               if (strlcpy(a, "yes", 2) != 3)
+                   return 1;]])],
+              [
+               AC_MSG_RESULT([yes])
+               AC_DEFINE_UNQUOTED([HAVE_STRLCPY], 1,
+                                  [Define to 1 if you have the strlcpy function.])
+              ],
+              [
+               AC_MSG_RESULT([no])
+               AC_DEFINE_UNQUOTED([HAVE_STRLCPY], 0,
+                                  [Define to 1 if you have the strlcpy function.])
+              ])
+
+AC_MSG_CHECKING([for strlcat])
+AC_RUN_IFELSE([AC_LANG_PROGRAM([[#include <string.h>]],[[
+               char a[4] = "no";
+               if (strlcat(a, "yes", 4) != 5)
+                   return 1;]])],
+              [
+               AC_MSG_RESULT([yes])
+               AC_DEFINE_UNQUOTED([HAVE_STRLCAT], 1,
+                                  [Define to 1 if you have the strlcat function.])
+              ],
+              [
+               AC_MSG_RESULT([no])
+               AC_DEFINE_UNQUOTED([HAVE_STRLCAT], 0,
+                                  [Define to 1 if you have the strlcat function.])
+              ])
+
 # Checks for library functions.
 AC_FUNC_MALLOC
 AC_FUNC_STRTOD
