@@ -42,7 +42,7 @@ extern std::string ASSETCHAINS_SELFIMPORT;
 uint256 BitcoinGetProofMerkleRoot(const std::vector<uint8_t> &proofData, std::vector<uint256> &txids);
 uint256 GatewaysReverseScan(uint256 &txid, int32_t height, uint256 reforacletxid, uint256 batontxid);
 int32_t GatewaysCointxidExists(struct CCcontract_info *cp, uint256 cointxid);
-uint8_t DecodeImportGatewayBindOpRet(char *burnaddr,const CScript &scriptPubKey,std::string &coin,uint256 &oracletxid,uint8_t &M,uint8_t &N,std::vector<CPubKey> &importgatewaypubkeys,uint8_t &taddr,uint8_t &prefix,uint8_t &prefix2,uint8_t &wiftype);
+uint8_t DecodeImportGatewayBindOpRet(char *burnaddr,size_t burnaddr_size,const CScript &scriptPubKey,std::string &coin,uint256 &oracletxid,uint8_t &M,uint8_t &N,std::vector<CPubKey> &importgatewaypubkeys,uint8_t &taddr,uint8_t &prefix,uint8_t &prefix2,uint8_t &wiftype);
 int64_t ImportGatewayVerify(char *refburnaddr,uint256 oracletxid,int32_t claimvout,std::string refcoin,uint256 burntxid,const std::string deposithex,std::vector<uint8_t>proof,uint256 merkleroot,CPubKey destpub,uint8_t taddr,uint8_t prefix,uint8_t prefix2);
 char *nonportable_path(char *str);
 char *portable_path(char *str);
@@ -366,7 +366,7 @@ int32_t CheckGATEWAYimport(CTransaction importTx,CTransaction burnTx,std::string
         LOGSTREAM("importgateway", CCLOG_INFO, stream << "CheckGATEWAYimport cant find bindtxid=" << bindtxid.GetHex() << std::endl);
         return(-1);
     }
-    else if (DecodeImportGatewayBindOpRet(deposit,bindtx.vout[numvouts - 1].scriptPubKey,coin,oracletxid,M,N,tmppubkeys,taddr,prefix,prefix2,wiftype) != 'B')
+    else if (DecodeImportGatewayBindOpRet(deposit,ARRAYSIZE(deposit),bindtx.vout[numvouts - 1].scriptPubKey,coin,oracletxid,M,N,tmppubkeys,taddr,prefix,prefix2,wiftype) != 'B')
     {
         LOGSTREAM("importcoin", CCLOG_INFO, stream << "CheckGATEWAYimport invalid bind tx. bindtxid=" << bindtxid.GetHex() << std::endl);
         return(-1);

@@ -1449,7 +1449,7 @@ UniValue games_extract(uint64_t txfee,struct CCcontract_info *cp,cJSON *params)
                         pk = buf2pk(pub33);
                     }
                     else if ( strlen(pubstr) < 36 )
-                        strcpy(gamesaddr,pubstr);
+                        strlcpy(gamesaddr,pubstr,ARRAYSIZE(gamesaddr));
                 }
                 //LogPrintf("gametxid.%s %s\n",gametxid.GetHex().c_str(),pubstr);
             }

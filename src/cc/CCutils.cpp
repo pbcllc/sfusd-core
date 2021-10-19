@@ -190,7 +190,7 @@ void CCaddr2set(struct CCcontract_info *cp,uint8_t evalcode,CPubKey pk,uint8_t *
     cp->unspendableEvalcode2 = evalcode;
     cp->unspendablepk2 = pk;
     memcpy(cp->unspendablepriv2,priv,32);
-    strcpy(cp->unspendableaddr2,coinaddr);
+    strlcpy(cp->unspendableaddr2,coinaddr,ARRAYSIZE(cp->unspendableaddr2));
 }
 
 void CCaddr3set(struct CCcontract_info *cp,uint8_t evalcode,CPubKey pk,uint8_t *priv,char *coinaddr)
@@ -198,7 +198,7 @@ void CCaddr3set(struct CCcontract_info *cp,uint8_t evalcode,CPubKey pk,uint8_t *
     cp->unspendableEvalcode3 = evalcode;
     cp->unspendablepk3 = pk;
     memcpy(cp->unspendablepriv3,priv,32);
-    strcpy(cp->unspendableaddr3,coinaddr);
+    strlcpy(cp->unspendableaddr3,coinaddr,ARRAYSIZE(cp->unspendableaddr3));
 }
 
 void CCaddr1of2set(struct CCcontract_info *cp, CPubKey pk1, CPubKey pk2, uint8_t *priv, char *coinaddr)
@@ -206,7 +206,7 @@ void CCaddr1of2set(struct CCcontract_info *cp, CPubKey pk1, CPubKey pk2, uint8_t
 	cp->coins1of2pk[0] = pk1;
 	cp->coins1of2pk[1] = pk2;
     memcpy(cp->coins1of2priv,priv,32);
-    strcpy(cp->coins1of2addr,coinaddr);
+    strlcpy(cp->coins1of2addr,coinaddr,ARRAYSIZE(cp->coins1of2addr));
 }
 
 void CCaddrTokens1of2set(struct CCcontract_info *cp, CPubKey pk1, CPubKey pk2, uint8_t *priv, char *tokenaddr)
@@ -214,7 +214,7 @@ void CCaddrTokens1of2set(struct CCcontract_info *cp, CPubKey pk1, CPubKey pk2, u
 	cp->tokens1of2pk[0] = pk1;
 	cp->tokens1of2pk[1] = pk2;
     memcpy(cp->tokens1of2priv,priv,32);
-	strcpy(cp->tokens1of2addr, tokenaddr);
+	strlcpy(cp->tokens1of2addr, tokenaddr, ARRAYSIZE(cp->tokens1of2addr));
 }
 
 bool Getscriptaddress(char *destaddr,const CScript &scriptPubKey)

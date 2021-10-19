@@ -1082,7 +1082,7 @@ UniValue rogue_extract(uint64_t txfee,struct CCcontract_info *cp,cJSON *params)
                         pk = buf2pk(pub33);
                     }
                     else if ( strlen(pubstr) < 36 )
-                        strcpy(rogueaddr,pubstr);
+                        strlcpy(rogueaddr,pubstr,ARRAYSIZE(rogueaddr));
                 }
                 //LogPrintf("gametxid.%s %s\n",gametxid.GetHex().c_str(),pubstr);
             }
@@ -1611,7 +1611,7 @@ bool rogue_validate(struct CCcontract_info *cp,int32_t height,Eval *eval,const C
                                     sprintf(cashstr,"tokentx.(%c) decoded.%d ht.%d gametxid.%s player.%s invalid playerdata[%d]\n",tokentx,decoded,height,gametxid.GetHex().c_str(),ptxid.GetHex().c_str(),(int32_t)playerdata.size());
                                     if ( strcmp(laststr,cashstr) != 0 )
                                     {
-                                        strcpy(laststr,cashstr);
+                                        strlcpy(laststr,cashstr,ARRAYSIZE(laststr));
                                         LogPrintf("%s\n",cashstr);
                                     }
                                     if ( enabled != 0 )
@@ -1627,7 +1627,7 @@ bool rogue_validate(struct CCcontract_info *cp,int32_t height,Eval *eval,const C
                                 sprintf(cashstr,"tokentx.(%c) decoded.%d ht.%d txid.%s %.8f vs vout2 %.8f",tokentx,decoded,height,txid.GetHex().c_str(),(double)cashout/COIN,(double)tx.vout[2].nValue/COIN);
                                 if ( strcmp(laststr,cashstr) != 0 )
                                 {
-                                    strcpy(laststr,cashstr);
+                                    strlcpy(laststr,cashstr,ARRAYSIZE(laststr));
                                     LogPrintf("%s\n",cashstr);
                                 }
                             } else cashout = 10000;
