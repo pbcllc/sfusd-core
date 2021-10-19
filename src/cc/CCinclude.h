@@ -80,6 +80,7 @@ Details.
 #include "../policy/policy.h"
 #include "../primitives/transaction.h"
 #include <boost/foreach.hpp>
+#include <compat.h>
 
 #ifndef ARRAYSIZE
 #define ARRAYSIZE(a) \

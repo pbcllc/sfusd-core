@@ -33,8 +33,6 @@
 #include "CCtokens.h"
 #include "CCImportGateway.h"
 
-#include <compat.h>
-
 /*
  CCcustom has most of the functions that need to be extended to create a new CC contract.
  
