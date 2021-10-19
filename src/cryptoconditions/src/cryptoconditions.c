@@ -73,7 +73,7 @@ char *cc_conditionUri(const CC *cond) {
 
     size_t out_size = 1000;
     unsigned char *out = calloc(1, out_size);
-    sprintf(out, "ni:///sha-256;%s?fpt=%s&cost=%lu",encoded, cc_typeName(cond), cc_getCost(cond));
+    snprintf(out, out_size, "ni:///sha-256;%s?fpt=%s&cost=%lu",encoded, cc_typeName(cond), cc_getCost(cond));
     
     if (cond->type->getSubtypes) {
         appendUriSubtypes(cond->type->getSubtypes(cond), out, out_size);
