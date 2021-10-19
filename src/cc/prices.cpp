@@ -112,7 +112,7 @@ int32_t priceind(const char *symbol)
     char name[65]; int32_t i,n = (int32_t)(cbopretsize(ASSETCHAINS_CBOPRET) / sizeof(uint32_t));
     for (i=1; i<n; i++)
     {
-        smartusd_pricename(name,i);
+        smartusd_pricename(name,ARRAYSIZE(name),i);
         if ( strcmp(name,symbol) == 0 )
             return(i);
     }

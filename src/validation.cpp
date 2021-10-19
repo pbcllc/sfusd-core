@@ -5548,9 +5548,9 @@ int32_t smartusd_heightpricebits(uint64_t *seedp,uint32_t *heightbits,int32_t nH
     return(-1);
 }
 
-char *smartusd_pricename(char *name,int32_t ind)
+char *smartusd_pricename(char *name, size_t name_size, int32_t ind)
 {
-    strcpy(name,"error");
+    strlcpy(name,"error",name_size);
 //We haven't cbopret
 //    if ( (ASSETCHAINS_CBOPRET & 1) != 0 && ind < SERPERNTCOIN_MAXPRICES )
 //    {
