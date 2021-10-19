@@ -14,8 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include <sys/types.h>
-#include <string.h>
+#include "strl.h"
 
 /*
  * Copy string src to buffer dst of size dsize.  At most dsize-1
