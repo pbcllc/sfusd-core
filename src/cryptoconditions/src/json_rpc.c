@@ -329,7 +329,7 @@ static cJSON* execJsonRPC(cJSON *root, char *err) {
 
 
 char *cc_jsonRPC(char* input) {
-    char err[1000] = "\0";
+    char err[MAX_ERR_LEN] = "\0";
     cJSON *out;
     cJSON *root = cJSON_Parse(input);
     if (!root) out = jsonErr("Error parsing JSON request");
