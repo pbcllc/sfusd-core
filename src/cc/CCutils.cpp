@@ -219,7 +219,7 @@ void CCaddrTokens1of2set(struct CCcontract_info *cp, CPubKey pk1, CPubKey pk2, u
 /**
  * @brief
  *
- * @param destaddr - buffer [64] for store address, belongs to scriptPubKey. Caller should provide (and guaruantee)
+ * @param destaddr - buffer [64] for store address, belongs to scriptPubKey. Caller should provide (and guarantee)
  *                   that buffer have at least 64-bytes size to store the address. All calls to this proc are
  *                   satisfied this rule.
  * @param scriptPubKey - script for extracting address.
@@ -244,7 +244,7 @@ bool Getscriptaddress(char *destaddr,const CScript &scriptPubKey)
 /**
  * @brief Get the Customscriptaddress object
  *
- * @param destaddr - buffer [64] for store address, belongs to scriptPubKey. Caller should provide (and guaruantee)
+ * @param destaddr - buffer [64] for store address, belongs to scriptPubKey. Caller should provide (and guarantee)
  *                   that buffer have at least 64-bytes size to store the address. All calls to this proc are
  *                   satisfied this rule.
  * @param scriptPubKey - script for extracting address.
