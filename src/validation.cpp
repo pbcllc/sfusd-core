@@ -5551,65 +5551,6 @@ int32_t smartusd_heightpricebits(uint64_t *seedp,uint32_t *heightbits,int32_t nH
 char *smartusd_pricename(char *name, size_t name_size, int32_t ind)
 {
     strlcpy(name,"error",name_size);
-//We haven't cbopret
-//    if ( (ASSETCHAINS_CBOPRET & 1) != 0 && ind < SERPERNTCOIN_MAXPRICES )
-//    {
-//        if ( ind < 4 )
-//        {
-//            switch ( ind )
-//            {
-//                case 0: strcpy(name,"timestamp"); break;
-//                case 1: strcpy(name,"BTC_USD"); break;
-//                case 2: strcpy(name,"BTC_GBP"); break;
-//                case 3: strcpy(name,"BTC_EUR"); break;
-//                default: return(0); break;
-//            }
-//            return(name);
-//        }
-//        else
-//        {
-//            ind -= 4;
-//            if ( (ASSETCHAINS_CBOPRET & 2) != 0 )
-//            {
-//                if ( ind < 0 )
-//                    return(0);
-//                if ( ind < sizeof(Forex)/sizeof(*Forex) )
-//                {
-//                    name[0] = 'U', name[1] = 'S', name[2] = 'D', name[3] = '_';
-//                    strcpy(name+4,Forex[ind]);
-//                    return(name);
-//                } else ind -= sizeof(Forex)/sizeof(*Forex);
-//            }
-//            if ( (ASSETCHAINS_CBOPRET & 4) != 0 )
-//            {
-//                if ( ind < 0 )
-//                    return(0);
-//                if ( ind < sizeof(Cryptos)/sizeof(*Cryptos) + ASSETCHAINS_PRICES.size() )
-//                {
-//                    if ( ind < sizeof(Cryptos)/sizeof(*Cryptos) )
-//                        strcpy(name,Cryptos[ind]);
-//                    else
-//                    {
-//                        ind -= (sizeof(Cryptos)/sizeof(*Cryptos));
-//                        strcpy(name,ASSETCHAINS_PRICES[ind].c_str());
-//                    }
-//                    strcat(name,"_BTC");
-//                    return(name);
-//                } else ind -= (sizeof(Cryptos)/sizeof(*Cryptos) + ASSETCHAINS_PRICES.size());
-//            }
-//            if ( (ASSETCHAINS_CBOPRET & 8) != 0 )
-//            {
-//                if ( ind < 0 )
-//                    return(0);
-//                if ( ind < ASSETCHAINS_STOCKS.size() )
-//                {
-//                    strcpy(name,ASSETCHAINS_STOCKS[ind].c_str());
-//                    strcat(name,"_USD");
-//                    return(name);
-//                } else ind -= ASSETCHAINS_STOCKS.size();
-//            }
-//        }
-//    }
     return(0);
 }
 
