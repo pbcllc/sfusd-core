@@ -70,9 +70,9 @@ int8_t numStakedNotaries(uint8_t pubkeys[64][33],int8_t era) {
     if ( ChainName[0] == 0 )
     {
         if ( ASSETCHAINS_SYMBOL[0] == 0 )
-            strcpy(ChainName,"KMD");
+            strlcpy(ChainName,"KMD",ARRAYSIZE(ChainName));
         else
-            strcpy(ChainName,ASSETCHAINS_SYMBOL);
+            strlcpy(ChainName,ASSETCHAINS_SYMBOL,ARRAYSIZE(ChainName));
     }
 
     if ( era == 0 )

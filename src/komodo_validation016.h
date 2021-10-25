@@ -951,31 +951,6 @@ uint32_t komodo_heightstamp(int32_t height)
     return(0);
 }
 
-/* 
-// already exists in src/cc/CCutils.cpp
-bool Getscriptaddress(char *destaddr,const CScript &scriptPubKey)
-{
-    CTxDestination address;
-    if ( ExtractDestination(scriptPubKey,address) != 0 )
-    {
-        strcpy(destaddr,(char *)EncodeDestination(address).c_str());
-        return(true);
-    }
-    //fprintf(stderr,"ExtractDestination failed\n");
-    return(false);
-} */
-
-/*
-// alderady exists in smartusd.cpp
-bool pubkey2addr(char *destaddr,uint8_t *pubkey33)
-{
-    std::vector<uint8_t>pk; int32_t i;
-    for (i=0; i<33; i++)
-        pk.push_back(pubkey33[i]);
-    return(Getscriptaddress(destaddr,CScript() << pk << OP_CHECKSIG));
-}
-*/
-
 struct notarized_checkpoint
 {
     uint256 notarized_hash,notarized_desttxid,MoM,MoMoM;

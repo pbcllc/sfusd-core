@@ -34,7 +34,7 @@ CScript EncodeImportGatewayBindOpRet(uint8_t funcid,std::string coin,uint256 ora
     return(opret);
 }
 
-uint8_t DecodeImportGatewayBindOpRet(char *burnaddr,const CScript &scriptPubKey,std::string &coin,uint256 &oracletxid,uint8_t &M,uint8_t &N,std::vector<CPubKey> &importgatewaypubkeys,uint8_t &taddr,uint8_t &prefix,uint8_t &prefix2,uint8_t &wiftype)
+uint8_t DecodeImportGatewayBindOpRet(char *burnaddr, size_t burnaddr_size, const CScript &scriptPubKey,std::string &coin,uint256 &oracletxid,uint8_t &M,uint8_t &N,std::vector<CPubKey> &importgatewaypubkeys,uint8_t &taddr,uint8_t &prefix,uint8_t &prefix2,uint8_t &wiftype)
 {
     std::vector<uint8_t> vopret; uint8_t *script,e,f; std::vector<CPubKey> pubkeys;
 
@@ -47,13 +47,13 @@ uint8_t DecodeImportGatewayBindOpRet(char *burnaddr,const CScript &scriptPubKey,
         {
             if ( N > 1 )
             {
-                strcpy(burnaddr,EncodeDestination(CScriptID(GetScriptForMultisig(M,importgatewaypubkeys))).c_str());
+                strlcpy(burnaddr,EncodeDestination(CScriptID(GetScriptForMultisig(M,importgatewaypubkeys))).c_str(),burnaddr_size);
                 LOGSTREAM("importgateway", CCLOG_DEBUG1, stream << "f." << f << " M." << (int)M << " of N." << (int)N << " size." << (int32_t)importgatewaypubkeys.size() << " -> " << burnaddr << std::endl);
             } else Getscriptaddress(burnaddr,CScript() << ParseHex(HexStr(importgatewaypubkeys[0])) << OP_CHECKSIG);
         }
         else
         {
-            if ( N > 1 ) strcpy(burnaddr,GetCustomBitcoinAddressStr(CScriptID(GetScriptForMultisig(M,importgatewaypubkeys)),taddr,prefix,prefix2).c_str());
+            if ( N > 1 ) strlcpy(burnaddr,GetCustomBitcoinAddressStr(CScriptID(GetScriptForMultisig(M,importgatewaypubkeys)),taddr,prefix,prefix2).c_str(),burnaddr_size);
             else GetCustomscriptaddress(burnaddr,CScript() << ParseHex(HexStr(importgatewaypubkeys[0])) << OP_CHECKSIG,taddr,prefix,prefix2);
         }
         return(f);
@@ -269,7 +269,7 @@ int32_t ImportGatewayBindExists(struct CCcontract_info *cp,CPubKey importgateway
     {
         if ( myGetTransaction(*it,tx,hashBlock) != 0 && (numvouts= tx.vout.size()) > 0 && DecodeImportGatewayOpRet(tx.vout[numvouts-1].scriptPubKey)=='B' )
         {
-            if ( DecodeImportGatewayBindOpRet(burnaddr,tx.vout[numvouts-1].scriptPubKey,coin,oracletxid,M,N,pubkeys,taddr,prefix,prefix2,wiftype) == 'B' )
+            if ( DecodeImportGatewayBindOpRet(burnaddr,ARRAYSIZE(burnaddr),tx.vout[numvouts-1].scriptPubKey,coin,oracletxid,M,N,pubkeys,taddr,prefix,prefix2,wiftype) == 'B' )
             {
                 if ( coin == refcoin )
                 {
@@ -286,7 +286,7 @@ int32_t ImportGatewayBindExists(struct CCcontract_info *cp,CPubKey importgateway
         const CTransaction &txmempool = *it;
 
         if ((numvouts=txmempool.vout.size()) > 0 && DecodeImportGatewayOpRet(tx.vout[numvouts-1].scriptPubKey)=='B')
-            if (DecodeImportGatewayBindOpRet(burnaddr,tx.vout[numvouts-1].scriptPubKey,coin,oracletxid,M,N,pubkeys,taddr,prefix,prefix2,wiftype) == 'B')
+            if (DecodeImportGatewayBindOpRet(burnaddr,ARRAYSIZE(burnaddr),tx.vout[numvouts-1].scriptPubKey,coin,oracletxid,M,N,pubkeys,taddr,prefix,prefix2,wiftype) == 'B')
                 return(1);
     }
 
@@ -364,7 +364,7 @@ bool ImportGatewayValidate(struct CCcontract_info *cp,Eval *eval,const CTransact
                             return eval->Invalid("gatewayswithdraw tx is not yet confirmed(notarised)!");
                         else if (myGetTransaction(bindtxid,tmptx,hashblock) == 0)
                             return eval->Invalid("invalid gatewaysbind txid!");
-                        else if ((numvouts=tmptx.vout.size()) < 1 || DecodeImportGatewayBindOpRet(burnaddr,tmptx.vout[numvouts-1].scriptPubKey,tmprefcoin,oracletxid,M,N,pubkeys,taddr,prefix,prefix2,wiftype) != 'B')
+                        else if ((numvouts=tmptx.vout.size()) < 1 || DecodeImportGatewayBindOpRet(burnaddr,ARRAYSIZE(burnaddr),tmptx.vout[numvouts-1].scriptPubKey,tmprefcoin,oracletxid,M,N,pubkeys,taddr,prefix,prefix2,wiftype) != 'B')
                             return eval->Invalid("invalid gatewaysbind OP_RETURN data!"); 
                         else if (tmprefcoin!=refcoin)
                             return eval->Invalid("refcoin different than in bind tx");
@@ -406,7 +406,7 @@ bool ImportGatewayValidate(struct CCcontract_info *cp,Eval *eval,const CTransact
                             return eval->Invalid("gatewayswithdraw tx is not yet confirmed(notarised)!");
                         else if (myGetTransaction(bindtxid,tmptx,hashblock) == 0)
                             return eval->Invalid("invalid gatewaysbind txid!");
-                        else if ((numvouts=tmptx.vout.size()) < 1 || DecodeImportGatewayBindOpRet(burnaddr,tmptx.vout[numvouts-1].scriptPubKey,tmprefcoin,oracletxid,M,N,pubkeys,taddr,prefix,prefix2,wiftype) != 'B')
+                        else if ((numvouts=tmptx.vout.size()) < 1 || DecodeImportGatewayBindOpRet(burnaddr,ARRAYSIZE(burnaddr),tmptx.vout[numvouts-1].scriptPubKey,tmprefcoin,oracletxid,M,N,pubkeys,taddr,prefix,prefix2,wiftype) != 'B')
                             return eval->Invalid("invalid gatewaysbind OP_RETURN data!"); 
                         else if (tmprefcoin!=refcoin)
                             return eval->Invalid("refcoin different than in bind tx");
@@ -443,7 +443,7 @@ bool ImportGatewayValidate(struct CCcontract_info *cp,Eval *eval,const CTransact
                             return eval->Invalid("gatewayswithdraw tx is not yet confirmed(notarised)!");
                         else if (myGetTransaction(bindtxid,tmptx,hashblock) == 0)
                             return eval->Invalid("invalid gatewaysbind txid!");
-                        else if ((numvouts=tmptx.vout.size()) < 1 || DecodeImportGatewayBindOpRet(burnaddr,tmptx.vout[numvouts-1].scriptPubKey,tmprefcoin,oracletxid,M,N,pubkeys,taddr,prefix,prefix2,wiftype) != 'B')
+                        else if ((numvouts=tmptx.vout.size()) < 1 || DecodeImportGatewayBindOpRet(burnaddr,ARRAYSIZE(burnaddr),tmptx.vout[numvouts-1].scriptPubKey,tmprefcoin,oracletxid,M,N,pubkeys,taddr,prefix,prefix2,wiftype) != 'B')
                             return eval->Invalid("invalid gatewaysbind OP_RETURN data!"); 
                         else if (tmprefcoin!=refcoin)
                             return eval->Invalid("refcoin different than in bind tx");
@@ -589,7 +589,7 @@ std::string ImportGatewayDeposit(uint64_t txfee,uint256 bindtxid,int32_t height,
         LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
         return("");
     }
-    if ( DecodeImportGatewayBindOpRet(burnaddr,bindtx.vout[numvouts-1].scriptPubKey,coin,oracletxid,M,N,pubkeys,taddr,prefix,prefix2,wiftype) != 'B' || refcoin != coin )
+    if ( DecodeImportGatewayBindOpRet(burnaddr,ARRAYSIZE(burnaddr),bindtx.vout[numvouts-1].scriptPubKey,coin,oracletxid,M,N,pubkeys,taddr,prefix,prefix2,wiftype) != 'B' || refcoin != coin )
     {
         CCerror = strprintf("invalid coin - bindtxid %s coin.%s",uint256_str(str,bindtxid),coin.c_str());
         LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
@@ -665,7 +665,7 @@ std::string ImportGatewayWithdraw(uint64_t txfee,uint256 bindtxid,std::string re
         LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
         return("");
     }
-    if( DecodeImportGatewayBindOpRet(burnaddr,tx.vout[numvouts-1].scriptPubKey,coin,oracletxid,M,N,msigpubkeys,taddr,prefix,prefix2,wiftype) != 'B' || coin != refcoin )
+    if( DecodeImportGatewayBindOpRet(burnaddr,ARRAYSIZE(burnaddr),tx.vout[numvouts-1].scriptPubKey,coin,oracletxid,M,N,msigpubkeys,taddr,prefix,prefix2,wiftype) != 'B' || coin != refcoin )
     {
         CCerror = strprintf("invalid bindtxid %s coin.%s",uint256_str(str,bindtxid),coin.c_str());
         LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
@@ -764,7 +764,7 @@ std::string ImportGatewayPartialSign(uint64_t txfee,uint256 lasttxid,std::string
             LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
             return("");
         }
-        else if (DecodeImportGatewayBindOpRet(burnaddr,tmptx.vout[numvouts-1].scriptPubKey,coin,oracletxid,M,N,pubkeys,taddr,prefix,prefix2,wiftype) != 'B'
+        else if (DecodeImportGatewayBindOpRet(burnaddr,ARRAYSIZE(burnaddr),tmptx.vout[numvouts-1].scriptPubKey,coin,oracletxid,M,N,pubkeys,taddr,prefix,prefix2,wiftype) != 'B'
             || refcoin!=coin)
         {
             CCerror = strprintf("invalid bind tx %s",uint256_str(str,bindtxid));
@@ -811,7 +811,7 @@ std::string ImportGatewayPartialSign(uint64_t txfee,uint256 lasttxid,std::string
             LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
             return("");
         }
-        else if (DecodeImportGatewayBindOpRet(burnaddr,tmptx.vout[numvouts-1].scriptPubKey,coin,oracletxid,M,N,pubkeys,taddr,prefix,prefix2,wiftype) != 'B'
+        else if (DecodeImportGatewayBindOpRet(burnaddr,ARRAYSIZE(burnaddr),tmptx.vout[numvouts-1].scriptPubKey,coin,oracletxid,M,N,pubkeys,taddr,prefix,prefix2,wiftype) != 'B'
             || refcoin!=coin)
         {
             CCerror = strprintf("invalid bind tx %s",uint256_str(str,bindtxid));
@@ -882,7 +882,7 @@ std::string ImportGatewayCompleteSigning(uint64_t txfee,uint256 lasttxid,std::st
             LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
             return("");
         }
-        else if (DecodeImportGatewayBindOpRet(burnaddr,tmptx.vout[numvouts-1].scriptPubKey,coin,oracletxid,M,N,pubkeys,taddr,prefix,prefix2,wiftype) != 'B'
+        else if (DecodeImportGatewayBindOpRet(burnaddr,ARRAYSIZE(burnaddr),tmptx.vout[numvouts-1].scriptPubKey,coin,oracletxid,M,N,pubkeys,taddr,prefix,prefix2,wiftype) != 'B'
             || refcoin!=coin)
         {
             CCerror = strprintf("invalid bind tx %s",uint256_str(str,bindtxid));
@@ -928,7 +928,7 @@ std::string ImportGatewayCompleteSigning(uint64_t txfee,uint256 lasttxid,std::st
             LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
             return("");
         }
-        else if (DecodeImportGatewayBindOpRet(burnaddr,tmptx.vout[numvouts-1].scriptPubKey,coin,oracletxid,M,N,pubkeys,taddr,prefix,prefix2,wiftype) != 'B'
+        else if (DecodeImportGatewayBindOpRet(burnaddr,ARRAYSIZE(burnaddr),tmptx.vout[numvouts-1].scriptPubKey,coin,oracletxid,M,N,pubkeys,taddr,prefix,prefix2,wiftype) != 'B'
             || refcoin!=coin)
         {
             CCerror = strprintf("invalid bind tx %s",uint256_str(str,bindtxid));
@@ -1000,7 +1000,7 @@ std::string ImportGatewayMarkDone(uint64_t txfee,uint256 completetxid,std::strin
         LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
         return("");
     }
-    else if (DecodeImportGatewayBindOpRet(burnaddr,tx.vout[numvouts-1].scriptPubKey,coin,oracletxid,M,N,pubkeys,taddr,prefix,prefix2,wiftype) != 'B'
+    else if (DecodeImportGatewayBindOpRet(burnaddr,ARRAYSIZE(burnaddr),tx.vout[numvouts-1].scriptPubKey,coin,oracletxid,M,N,pubkeys,taddr,prefix,prefix2,wiftype) != 'B'
         || refcoin!=coin)
     {
         CCerror = strprintf("invalid bind tx %s",uint256_str(str,bindtxid));
@@ -1036,7 +1036,7 @@ UniValue ImportGatewayPendingWithdraws(uint256 bindtxid,std::string refcoin)
         LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
         return("");
     }
-    if ( DecodeImportGatewayBindOpRet(burnaddr,tx.vout[numvouts-1].scriptPubKey,coin,oracletxid,M,N,msigpubkeys,taddr,prefix,prefix2,wiftype) != 'B' || refcoin != coin )
+    if ( DecodeImportGatewayBindOpRet(burnaddr,ARRAYSIZE(burnaddr),tx.vout[numvouts-1].scriptPubKey,coin,oracletxid,M,N,msigpubkeys,taddr,prefix,prefix2,wiftype) != 'B' || refcoin != coin )
     {
         CCerror = strprintf("invalid bindtxid %s coin.%s",uint256_str(str,bindtxid),coin.c_str());
         LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
@@ -1124,7 +1124,7 @@ UniValue ImportGatewayProcessedWithdraws(uint256 bindtxid,std::string refcoin)
         LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
         return("");
     }
-    if ( DecodeImportGatewayBindOpRet(burnaddr,tx.vout[numvouts-1].scriptPubKey,coin,oracletxid,M,N,msigpubkeys,taddr,prefix,prefix2,wiftype) != 'B' || refcoin != coin)
+    if ( DecodeImportGatewayBindOpRet(burnaddr,ARRAYSIZE(burnaddr),tx.vout[numvouts-1].scriptPubKey,coin,oracletxid,M,N,msigpubkeys,taddr,prefix,prefix2,wiftype) != 'B' || refcoin != coin)
     {
         CCerror = strprintf("invalid bindtxid %s coin.%s",uint256_str(str,bindtxid),coin.c_str());
         LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
@@ -1183,7 +1183,7 @@ UniValue ImportGatewayList()
         txid = *it;
         if ( myGetTransaction(txid,vintx,hashBlock) != 0 )
         {
-            if ( vintx.vout.size() > 0 && DecodeImportGatewayBindOpRet(burnaddr,vintx.vout[vintx.vout.size()-1].scriptPubKey,coin,oracletxid,M,N,pubkeys,taddr,prefix,prefix2,wiftype) != 0 )
+            if ( vintx.vout.size() > 0 && DecodeImportGatewayBindOpRet(burnaddr,ARRAYSIZE(burnaddr),vintx.vout[vintx.vout.size()-1].scriptPubKey,coin,oracletxid,M,N,pubkeys,taddr,prefix,prefix2,wiftype) != 0 )
             {
                 result.push_back(uint256_str(str,txid));
             }
@@ -1204,7 +1204,7 @@ UniValue ImportGatewayExternalAddress(uint256 bindtxid,CPubKey pubkey)
         LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
         return("");
     }
-    if ( DecodeImportGatewayBindOpRet(burnaddr,tx.vout[numvouts-1].scriptPubKey,coin,oracletxid,M,N,msigpubkeys,taddr,prefix,prefix2,wiftype) != 'B')
+    if ( DecodeImportGatewayBindOpRet(burnaddr,ARRAYSIZE(burnaddr),tx.vout[numvouts-1].scriptPubKey,coin,oracletxid,M,N,msigpubkeys,taddr,prefix,prefix2,wiftype) != 'B')
     {
         CCerror = strprintf("invalid bindtxid %s coin.%s",uint256_str(str,bindtxid),coin.c_str());
         LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
@@ -1228,7 +1228,7 @@ UniValue ImportGatewayDumpPrivKey(uint256 bindtxid,CKey key)
         LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
         return("");
     }
-    if ( DecodeImportGatewayBindOpRet(burnaddr,tx.vout[numvouts-1].scriptPubKey,coin,oracletxid,M,N,msigpubkeys,taddr,prefix,prefix2,wiftype) != 'B')
+    if ( DecodeImportGatewayBindOpRet(burnaddr,ARRAYSIZE(burnaddr),tx.vout[numvouts-1].scriptPubKey,coin,oracletxid,M,N,msigpubkeys,taddr,prefix,prefix2,wiftype) != 'B')
     {
         CCerror = strprintf("invalid bindtxid %s coin.%s",uint256_str(str,bindtxid),coin.c_str());
         LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
@@ -1257,7 +1257,7 @@ UniValue ImportGatewayInfo(uint256 bindtxid)
         LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
         return("");
     }
-    if ( DecodeImportGatewayBindOpRet(burnaddr,tx.vout[numvouts-1].scriptPubKey,coin,oracletxid,M,N,msigpubkeys,taddr,prefix,prefix2,wiftype) != 'B')
+    if ( DecodeImportGatewayBindOpRet(burnaddr,ARRAYSIZE(burnaddr),tx.vout[numvouts-1].scriptPubKey,coin,oracletxid,M,N,msigpubkeys,taddr,prefix,prefix2,wiftype) != 'B')
     {
         CCerror = strprintf("invalid bindtxid %s coin.%s",uint256_str(str,bindtxid),coin.c_str());
         LOGSTREAM("importgateway",CCLOG_INFO, stream << CCerror << std::endl);
@@ -1268,7 +1268,7 @@ UniValue ImportGatewayInfo(uint256 bindtxid)
         result.push_back(Pair("result","success"));
         result.push_back(Pair("name","ImportGateway"));
         burnaddr[0] = 0;
-        if ( tx.vout.size() > 0 && DecodeImportGatewayBindOpRet(burnaddr,tx.vout[tx.vout.size()-1].scriptPubKey,coin,oracletxid,M,N,pubkeys,taddr,prefix,prefix2,wiftype) != 0 && M <= N && N > 0 )
+        if ( tx.vout.size() > 0 && DecodeImportGatewayBindOpRet(burnaddr,ARRAYSIZE(burnaddr),tx.vout[tx.vout.size()-1].scriptPubKey,coin,oracletxid,M,N,pubkeys,taddr,prefix,prefix2,wiftype) != 0 && M <= N && N > 0 )
         {
             result.push_back(Pair("M",M));
             result.push_back(Pair("N",N));

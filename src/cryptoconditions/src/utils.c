@@ -25,6 +25,7 @@
 #include "asn/asn_application.h"
 //#include "cryptoconditions.h"
 #include "internal.h"
+#include "strl.h"
 
 
 static unsigned char encoding_table[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
@@ -91,8 +92,10 @@ unsigned char *base64_decode(const unsigned char *data_,
 
     size_t input_length = strlen(data_);
     int rem = input_length % 4;
-    unsigned char *data = calloc(1,input_length + (4-rem));
-    strcpy(data, data_);
+    size_t data_size = input_length + (4-rem);
+    unsigned char *data = calloc(1,data_size);
+
+    strlcpy(data, data_, data_size);
 
     // for unpadded b64
     if (0 != rem) {
@@ -160,11 +163,11 @@ void dumpStr(unsigned char *str, size_t len) {
 
 int checkString(const cJSON *value, char *key, char *err) {
     if (value == NULL) {
-        sprintf(err, "%s is required", key);
+        snprintf(err, MAX_ERR_LEN, "%s is required", key);
         return 0;
     }
     if (!cJSON_IsString(value)) {
-        sprintf(err, "%s must be a string", key);
+        snprintf(err, MAX_ERR_LEN, "%s must be a string", key);
         return 0;
     }
     return 1;
@@ -177,7 +180,7 @@ int checkDecodeBase64(const cJSON *value, char *key, char *err, unsigned char **
 
     *data = base64_decode(value->valuestring, size);
     if (!*data) {
-        sprintf(err, "%s must be valid base64 string", key);
+        snprintf(err, MAX_ERR_LEN, "%s must be valid base64 string", key);
         return 0;
     }
     return 1;
@@ -188,7 +191,7 @@ int jsonGetBase64(const cJSON *params, char *key, char *err, unsigned char **dat
 {
     cJSON *item = cJSON_GetObjectItem(params, key);
     if (!item) {
-        sprintf(err, "%s is required", key);
+        snprintf(err, MAX_ERR_LEN, "%s is required", key);
         return 0;
     }
     return checkDecodeBase64(item, key, err, data, size);
@@ -270,7 +273,7 @@ bool checkDecodeHex(const cJSON *value, char *key, char *err, unsigned char **da
 
     *data = cc_hex_decode(value->valuestring);
     if (!*data) {
-        sprintf(err, "%s must be valid hex string", key);
+        snprintf(err, MAX_ERR_LEN, "%s must be valid hex string", key);
         return 0;
     }
     *size = strlen(value->valuestring) / 2;
@@ -282,7 +285,7 @@ bool jsonGetHex(const cJSON *params, char *key, char *err, unsigned char **data,
 {
     cJSON *item = cJSON_GetObjectItem(params, key);
     if (!item) {
-        sprintf(err, "%s is required", key);
+        snprintf(err, MAX_ERR_LEN, "%s is required", key);
         return 0;
     }
     return checkDecodeHex(item, key, err, data, size);

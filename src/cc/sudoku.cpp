@@ -208,7 +208,7 @@
 #include <time.h>
 #include <limits.h>
 
-#define VERSION "1.11"
+#define SUDOKU_VERSION "1.11"
 
 #define PUZZLE_ORDER 3
 #define PUZZLE_DIM (PUZZLE_ORDER*PUZZLE_ORDER)
@@ -489,10 +489,10 @@ static char *clues(short cell)
     if (!multi) return "NULL";
     
     if (multi > 1) {
-        strcpy(buf, "tuple (");
+        strlcpy(buf, "tuple (",ARRAYSIZE(buf));
     }
     else {
-        strcpy(buf, "value ");
+        strlcpy(buf, "value ",ARRAYSIZE(buf));
     }
     
     p = buf + strlen(buf);
@@ -841,9 +841,9 @@ static void diagnostic_grid(grid *g, FILE *h)
         return;
     }
     
-    strcpy(cbuf1, "   |");
-    strcpy(cbuf2, cbuf1);
-    strcpy(cbuf3, cbuf1);
+    strlcpy(cbuf1, "   |", ARRAYSIZE(cbuf1));
+    strlcpy(cbuf2, cbuf1,  ARRAYSIZE(cbuf2));
+    strlcpy(cbuf3, cbuf1,  ARRAYSIZE(cbuf3));
     fprintf(h, "\n");
     
     for (i = 0; i < PUZZLE_DIM; i++) {
@@ -855,9 +855,9 @@ static void diagnostic_grid(grid *g, FILE *h)
             c = g->cell[row[i][j]];
             
             if (bitcount(c) == 1) {
-                strcpy(cbuf1, "   |");
-                strcpy(cbuf2, cbuf1);
-                strcpy(cbuf3, cbuf1);
+                strlcpy(cbuf1, "   |", ARRAYSIZE(cbuf1));
+                strlcpy(cbuf2, cbuf1,  ARRAYSIZE(cbuf2));
+                strlcpy(cbuf3, cbuf1,  ARRAYSIZE(cbuf3));
                 cbuf2[1] = symtab[c];
             }
             else {
@@ -872,9 +872,9 @@ static void diagnostic_grid(grid *g, FILE *h)
                 if (c & 256) cbuf3[2] = '*'; else cbuf3[2] = '.';
             }
             
-            strcat(line1, cbuf1);
-            strcat(line2, cbuf2);
-            strcat(line3, cbuf3);
+            strlcat(line1, cbuf1,ARRAYSIZE(line1));
+            strlcat(line2, cbuf2,ARRAYSIZE(line2));
+            strlcat(line3, cbuf3,ARRAYSIZE(line3));
         }
         
         EXPLAIN_INDENT(h);
@@ -1792,7 +1792,7 @@ int dupree_solver(int32_t dispflag,int32_t *scorep,char *puzzle)
      argv[2] = puzzle;
      argv[3] = 0;*/
     /* Print sign-on message to console */
-    //LogPrintf( "%s version %s\n", myname, VERSION); fflush(stderr);
+    //LogPrintf( "%s version %s\n", myname, SUDOKU_VERSION); fflush(stderr);
     argc = 1;
     /* Init */
     h = 0;//stdin;
@@ -1852,7 +1852,7 @@ int dupree_solver(int32_t dispflag,int32_t *scorep,char *puzzle)
                     exit(1);
                 }
                 if (strlen(optarg) == PUZZLE_CELLS) {
-                    strcpy(inbuf, optarg);
+                    strlcpy(inbuf, optarg,,ARRAYSIZE(inbuf));
                 }
                 else {
                     LogPrintf( "Invalid puzzle specified: %s\n", optarg);
@@ -1912,7 +1912,7 @@ int dupree_solver(int32_t dispflag,int32_t *scorep,char *puzzle)
     /* Set prt flag if we're printing anything at all */
     prt = prt_mask | prt_grid | prt_score | prt_depth | prt_answer | prt_num | prt_givens;
     
-    strcpy(inbuf,puzzle);
+    strlcpy(inbuf,puzzle,ARRAYSIZE(inbuf));
     count = solved = unsolved = 0;
     //LogPrintf("inbuf.(%s)\n",inbuf);
     while (*inbuf) {
@@ -2603,7 +2603,7 @@ uint8_t sudoku_solutionopreturndecode(char solution[82],uint32_t timestamps[81],
     {
         if ( data.size() == 81*sizeof(uint32_t) && str.size() == 81 )
         {
-            strcpy(solution,str.c_str());
+            strlcpy(solution,str.c_str(),82);
             for (i=ind=0; i<81; i++)
             {
                 if ( solution[i] < '1' || solution[i] > '9' )
@@ -2967,7 +2967,7 @@ bool sudoku_validate(struct CCcontract_info *cp,int32_t height,Eval *eval,const 
                                 sprintf(str,"ht.%d score.%d vs %.8f %s",height,score,(double)tx.vout[1].nValue/COIN,tx.GetHash().ToString().c_str());
                                 if ( strcmp(str,laststr) != 0 )
                                 {
-                                    strcpy(laststr,str);
+                                    strlcpy(laststr,str,ARRAYSIZE(laststr));
                                     LogPrintf("%s\n",str);
                                 }
                                 if ( strcmp(ASSETCHAINS_SYMBOL,"SUDOKU") != 0 || height > 2000 )
@@ -2981,7 +2981,7 @@ bool sudoku_validate(struct CCcontract_info *cp,int32_t height,Eval *eval,const 
                         sprintf(str,"SOLVED ht.%d %.8f %s",height,(double)tx.vout[0].nValue/COIN,tx.GetHash().ToString().c_str());
                         if ( strcmp(str,laststr) != 0 )
                         {
-                            strcpy(laststr,str);
+                            strlcpy(laststr,str,ARRAYSIZE(laststr));
                             LogPrintf("%s\n",str);
                             dispflag = 1;
                         } else dispflag = 0;

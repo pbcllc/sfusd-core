@@ -195,13 +195,13 @@ static Fulfillment_t *thresholdToFulfillment(const CC *cond) {
 static CC *thresholdFromJSON(const cJSON *params, char *err) {
     cJSON *threshold_item = cJSON_GetObjectItem(params, "threshold");
     if (!cJSON_IsNumber(threshold_item)) {
-        strcpy(err, "threshold must be a number");
+        strlcpy(err, "threshold must be a number", MAX_ERR_LEN);
         return NULL;
     }
 
     cJSON *subfulfillments_item = cJSON_GetObjectItem(params, "subfulfillments");
     if (!cJSON_IsArray(subfulfillments_item)) {
-        strcpy(err, "subfulfullments must be an array");
+        strlcpy(err, "subfulfullments must be an array", MAX_ERR_LEN);
         return NULL;
     }
 

@@ -1861,7 +1861,7 @@ double DiceStatus(uint64_t txfee,char *planstr,uint256 fundingtxid,uint256 bettx
         }
         if ( didinit == 0 && scriptPubKey == fundingPubKey )
         {
-            strcpy(_planstr,planstr);
+            strlcpy(_planstr,planstr,ARRAYSIZE(_planstr));
             dealer0_fundingtxid = fundingtxid;
             if ( pthread_create((pthread_t *)malloc(sizeof(pthread_t)),NULL,dealer0_loop,_planstr) == 0 )
                 didinit = 1;

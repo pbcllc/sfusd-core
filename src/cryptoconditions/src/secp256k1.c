@@ -34,6 +34,7 @@
 #include "include/secp256k1/include/secp256k1.h"
 #include "cryptoconditions.h"
 #include "internal.h"
+#include "strl.h"
 
 
 struct CCType CC_Secp256k1Type;
@@ -243,13 +244,13 @@ static CC *secp256k1FromJSON(const cJSON *params, char *err) {
 
     if (!jsonGetHexOptional(params, "signature", err, &sig, &sigSize)) goto END;
     if (sig && SECP256K1_SIG_SIZE != sigSize) {
-        strcpy(err, "signature has incorrect length");
+        strlcpy(err, "signature has incorrect length", MAX_ERR_LEN);
         goto END;
     }
 
     cond = cc_secp256k1Condition(pk, sig);
     if (!cond) {
-        strcpy(err, "invalid public key");
+        strlcpy(err, "invalid public key", MAX_ERR_LEN);
     }
 END:
     free(pk);

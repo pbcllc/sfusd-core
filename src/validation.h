@@ -885,7 +885,7 @@ int32_t _smartusd_heightpricebits(uint64_t *seedp,uint32_t *heightbits,CBlock *b
 int32_t smartusd_heightpricebits(uint64_t *seedp,uint32_t *heightbits,int32_t nHeight);
 CBlockIndex *smartusd_chainactive(int32_t height);
 int32_t smartusd_blockload(CBlock& block,CBlockIndex *pindex);
-char *smartusd_pricename(char *name,int32_t ind);
+char *smartusd_pricename(char *name, size_t name_size, int32_t ind);
 int64_t smartusd_pricecorrelated(uint64_t seed,int32_t ind,uint32_t *rawprices,int32_t rawskip,uint32_t *nonzprices,int32_t smoothwidth);
 int64_t smartusd_pricemult(int32_t ind);
 int64_t smartusd_priceave(int64_t *buf,int64_t *correlated,int32_t cskip);

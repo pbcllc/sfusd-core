@@ -26,6 +26,7 @@
 extern "C" {
 #endif
 
+#define MAX_ERR_LEN 1000
 
 struct CC;
 struct CCType;

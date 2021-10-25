@@ -1850,7 +1850,7 @@ UniValue prices(const JSONRPCRequest& request)
     for (j=1; j<numpricefeeds; j++)
     {
         UniValue item(UniValue::VOBJ),p(UniValue::VARR);
-        if ( (str= smartusd_pricename(name,j)) != 0 )
+        if ( (str = smartusd_pricename(name, 64, j)) != 0 )
         {
             item.push_back(Pair("name",str));
             if ( numsamples >= width )

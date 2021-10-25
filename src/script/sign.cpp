@@ -140,7 +140,7 @@ bool CCinitLite(struct CCcontract_info *cp, uint8_t evalcode)
     return found;
 }
 
-bool _Getscriptaddress(char *destaddr, const CScript &scriptPubKey)
+bool _Getscriptaddress(char *destaddr, size_t destaddr_size, const CScript &scriptPubKey)
 {
     CTxDestination address;
     txnouttype whichType;
@@ -148,7 +148,7 @@ bool _Getscriptaddress(char *destaddr, const CScript &scriptPubKey)
     if (Solver(scriptPubKey, whichType, vvch) && vvch[0].size() == 20)
     {
         address = CKeyID(uint160(vvch[0]));
-        strcpy(destaddr,EncodeDestination(address).c_str());
+        strlcpy(destaddr,EncodeDestination(address).c_str(),destaddr_size);
         return(true);
     }
     LogPrintf("Solver for scriptPubKey failed\n%s\n", scriptPubKey.ToString().c_str());
@@ -179,7 +179,7 @@ static bool SignStepCC(const BaseSignatureCreator& creator, const CScript& scrip
         // get the keyID address of the cc and if it is an unspendable cc address, use its pubkey
         // we have nothing else
         char addr[64];
-        if (_Getscriptaddress(addr, subScript) && GetCCByUnspendableAddress(&C, addr))
+        if (_Getscriptaddress(addr, ARRAYSIZE(addr), subScript) && GetCCByUnspendableAddress(&C, addr))
         {
             vPK.push_back(CPubKey(ParseHex(C.CChexstr)));
             p = COptCCParams(p.VERSION, C.evalcode, 1, 1, vPK, vParams);

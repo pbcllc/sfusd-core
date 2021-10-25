@@ -21,6 +21,7 @@
 #include "include/cJSON.h"
 #include "include/ed25519/src/ed25519.h"
 #include "cryptoconditions.h"
+#include "strl.h"
 
 
 struct CCType CC_Ed25519Type;
@@ -97,12 +98,12 @@ static CC *ed25519FromJSON(const cJSON *params, char *err) {
 
     cJSON *pk_item = cJSON_GetObjectItem(params, "publicKey");
     if (!cJSON_IsString(pk_item)) {
-        strcpy(err, "publicKey must be a string");
+        strlcpy(err, "publicKey must be a string", MAX_ERR_LEN);
         return NULL;
     }
     unsigned char *pk = base64_decode(pk_item->valuestring, &binsz);
     if (32 != binsz) {
-        strcpy(err, "publicKey has incorrect length");
+        strlcpy(err, "publicKey has incorrect length", MAX_ERR_LEN);
         free(pk);
         return NULL;
     }
@@ -111,12 +112,12 @@ static CC *ed25519FromJSON(const cJSON *params, char *err) {
     unsigned char *sig = NULL;
     if (signature_item && !cJSON_IsNull(signature_item)) {
         if (!cJSON_IsString(signature_item)) {
-            strcpy(err, "signature must be null or a string");
+            strlcpy(err, "signature must be null or a string", MAX_ERR_LEN);
             return NULL;
         }
         sig = base64_decode(signature_item->valuestring, &binsz);
         if (64 != binsz) {
-            strcpy(err, "signature has incorrect length");
+            strlcpy(err, "signature has incorrect length", MAX_ERR_LEN);
             free(sig);
             return NULL;
         }
