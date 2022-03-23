@@ -68,7 +68,7 @@
 #include <zmq/zmqnotificationinterface.h>
 #endif
 
-#define CCENABLEALL memset(ASSETCHAINS_CCDISABLES,0,sizeof(ASSETCHAINS_CCDISABLES))
+#include "cc/CCinclude.h"
 
 bool fFeeEstimatesInitialized = false;
 static const bool DEFAULT_PROXYRANDOMIZE = true;
@@ -1169,7 +1169,7 @@ bool AppInitParameterInteraction()
 
     for ( int i = 0; i < 256; i++ )
         mapHeightEvalActivate[i] = Params().GetConsensus().nCCActivationHeight;
-    CCENABLEALL;
+    CCDISABLEALL;
 
     LogPrintf("smart utxo CC contracts will activate at height.%d\n",Params().GetConsensus().nCCActivationHeight);
 
