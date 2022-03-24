@@ -22,7 +22,7 @@ To Build
 ./autogen.sh
 ./configure
 make
-make install # optional
+sudo make install # optional
 ```
 
 This will build bitcoin-qt as well if the dependencies are met.
