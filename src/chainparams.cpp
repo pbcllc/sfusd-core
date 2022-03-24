@@ -136,7 +136,7 @@ public:
            after them.  They are too deep in the chain to be ever reorged,
            and thus this is also fine.  */
         // FIXME: Activate BIP16 with a softfork.
-        consensus.nCCActivationHeight = 0; // disable all cc modules by default
+        consensus.nCCActivationHeight = std::numeric_limits<int32_t>::max(); // disable all cc modules by default
         consensus.BIP16Height = 10000000;
         consensus.BIP34Height = 128;
         consensus.BIP34Hash = uint256S("0x000000001419c08805f6e6feb69c33fadc375b17ae19a411e2ecfd8bcccc332a");
