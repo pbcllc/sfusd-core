@@ -3926,8 +3926,9 @@ bool CChainState::AcceptBlockHeader(const CBlockHeader& block, CValidationState&
                 *ppindex = pindex;
             if (pindex->nStatus & BLOCK_FAILED_MASK)
             {
-                LogPrintf("reconsider block %s\n",hash.GetHex().c_str());
-                pindex->nStatus &= ~BLOCK_FAILED_MASK;
+                // LogPrintf("reconsider block %s\n",hash.GetHex().c_str());
+                // pindex->nStatus &= ~BLOCK_FAILED_MASK;
+                return state.Invalid(error("%s: block %s is marked invalid", __func__, hash.ToString()), 0, "duplicate");
             }
             return true;
         }
