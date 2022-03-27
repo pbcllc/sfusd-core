@@ -121,6 +121,17 @@ void BuildChain(const uint256& root, int height, const unsigned int invalid_rate
 
 BOOST_AUTO_TEST_CASE(processnewblock_signals_ordering)
 {
+    // as the first block in the chain have other subsidy than others,
+    // we should have at least one block in the chain before call CreateNewBlock
+    // internally, to allow GetBlockSubsidy return correct value for coinbase,
+    // otherwise coinbases for all generated blocks will pay too much and test will
+    // fail
+    bool fNewBlock;
+    CBlock firstBlock;
+    CDataStream stream(ParseHex("04000100e4f48b45086ef51b1bdf9770c3cbe22d94a446c43536683ff9ad7c405afa382032a386434088f9f50180f4385e03d06213e01c6caf72ccc541cb9e76859513baca174460ffff7f20010000000101000000010000000000000000000000000000000000000000000000000000000000000000ffffffff025100ffffffff01000084e2506ce67c0301495100000000"), SER_NETWORK, PROTOCOL_VERSION);
+    stream >> firstBlock;
+    ProcessNewBlock(Params(), std::make_shared<CBlock>(firstBlock), true, &fNewBlock);
+
     // build a large-ish chain that's likely to have some forks
     std::vector<std::shared_ptr<const CBlock>> blocks;
     while (blocks.size() < 50) {
