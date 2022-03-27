@@ -1386,7 +1386,7 @@ void komodo_connectblock(CBlockIndex *pindex,CBlock& block)
         hwmheight = pindex->nHeight;
     else
     {
-        if ( pindex->nHeight != hwmheight )
+        if ( pindex->nHeight != hwmheight && Params().NetworkIDString() != CBaseChainParams::REGTEST)
             printf("%s hwmheight.%d vs pindex->nHeight.%d t.%u reorg.%d\n",ASSETCHAINS_SYMBOL,hwmheight,pindex->nHeight,(uint32_t)pindex->nTime,hwmheight-pindex->nHeight);
     }
     if ( pindex != 0 )
