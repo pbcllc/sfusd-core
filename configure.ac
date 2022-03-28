@@ -2,7 +2,7 @@ dnl require autoconf 2.60 (AS_ECHO/AS_ECHO_N)
 AC_PREREQ([2.60])
 define(_CLIENT_VERSION_MAJOR, 0)
 define(_CLIENT_VERSION_MINOR, 16)
-define(_CLIENT_VERSION_REVISION, 3)
+define(_CLIENT_VERSION_REVISION, 4)
 define(_CLIENT_VERSION_BUILD, 0)
 define(_CLIENT_VERSION_IS_RELEASE, true)
 define(_COPYRIGHT_YEAR, 2020)
@@ -595,6 +595,8 @@ fi
 AC_CHECK_HEADERS([endian.h sys/endian.h byteswap.h stdio.h stdlib.h unistd.h strings.h sys/types.h sys/stat.h sys/select.h sys/prctl.h])
 
 AC_CHECK_DECLS([strnlen])
+AC_CHECK_DECLS([strlcpy])
+AC_CHECK_DECLS([strlcat])
 
 # Check for daemon(3), unrelated to --with-daemon (although used by it)
 AC_CHECK_DECLS([daemon])

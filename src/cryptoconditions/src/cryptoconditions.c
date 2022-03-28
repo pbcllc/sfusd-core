@@ -20,6 +20,7 @@
 #include "asn/OCTET_STRING.h"
 #include "cryptoconditions.h"
 #include "src/internal.h"
+#include "src/strl.h"
 #include "src/threshold.c"
 #include "src/prefix.c"
 #include "src/preimage.c"
@@ -47,16 +48,16 @@ struct CCType *CCTypeRegistry[] = {
 int CCTypeRegistryLength = sizeof(CCTypeRegistry) / sizeof(CCTypeRegistry[0]);
 
 
-void appendUriSubtypes(uint32_t mask, unsigned char *buf) {
+void appendUriSubtypes(uint32_t mask, unsigned char *buf, size_t buf_size) {
     int append = 0;
     for (int i=0; i<32; i++) {
         if (mask & 1 << i) {
             if (append) {
-                strcat(buf, ",");
-                strcat(buf, CCTypeRegistry[i]->name);
+                strlcat(buf, ",", buf_size);
+                strlcat(buf, CCTypeRegistry[i]->name, buf_size);
             } else {
-                strcat(buf, "&subtypes=");
-                strcat(buf, CCTypeRegistry[i]->name);
+                strlcat(buf, "&subtypes=", buf_size);
+                strlcat(buf, CCTypeRegistry[i]->name, buf_size);
                 append = 1;
             }
         }
@@ -70,11 +71,12 @@ char *cc_conditionUri(const CC *cond) {
 
     unsigned char *encoded = base64_encode(fp, 32);
 
-    unsigned char *out = calloc(1, 1000);
-    sprintf(out, "ni:///sha-256;%s?fpt=%s&cost=%lu",encoded, cc_typeName(cond), cc_getCost(cond));
+    size_t out_size = 1000;
+    unsigned char *out = calloc(1, out_size);
+    snprintf(out, out_size, "ni:///sha-256;%s?fpt=%s&cost=%lu",encoded, cc_typeName(cond), cc_getCost(cond));
     
     if (cond->type->getSubtypes) {
-        appendUriSubtypes(cond->type->getSubtypes(cond), out);
+        appendUriSubtypes(cond->type->getSubtypes(cond), out, out_size);
     }
 
     free(fp);

@@ -16,6 +16,7 @@
 
 #include "cryptoconditions.h"
 #include "internal.h"
+#include "strl.h"
 #include <cJSON.h>
 
 #include <stdlib.h>
@@ -48,12 +49,12 @@ static cJSON *jsonFulfillment(CC *cond) {
 
 CC *cc_conditionFromJSON(cJSON *params, char *err) {
     if (!params || !cJSON_IsObject(params)) {
-        strcpy(err, "Condition params must be an object");
+        strlcpy(err, "Condition params must be an object", MAX_ERR_LEN);
         return NULL;
     }
     cJSON *typeName = cJSON_GetObjectItem(params, "type");
     if (!typeName || !cJSON_IsString(typeName)) {
-        strcpy(err, "\"type\" must be a string");
+        strlcpy(err, "\"type\" must be a string", MAX_ERR_LEN);
         return NULL;
     }
     for (int i=0; i<CCTypeRegistryLength; i++) {
@@ -63,7 +64,7 @@ CC *cc_conditionFromJSON(cJSON *params, char *err) {
             }
         }
     }
-    strcpy(err, "cannot detect type of condition");
+    strlcpy(err, "cannot detect type of condition", MAX_ERR_LEN);
     return NULL;
 }
 
@@ -118,7 +119,7 @@ static cJSON *jsonVerifyFulfillment(cJSON *params, char *err) {
     CC *cond = cc_readFulfillmentBinary(ffill_bin, ffill_bin_len);
 
     if (!cond) {
-        strcpy(err, "Invalid fulfillment payload");
+        strlcpy(err, "Invalid fulfillment payload", MAX_ERR_LEN);
         goto END;
     }
 
@@ -142,7 +143,7 @@ static cJSON *jsonDecodeFulfillment(cJSON *params, char *err) {
     CC *cond = cc_readFulfillmentBinary(ffill_bin, ffill_bin_len);
     free(ffill_bin);
     if (!cond) {
-        strcpy(err, "Invalid fulfillment payload");
+        strlcpy(err, "Invalid fulfillment payload", MAX_ERR_LEN);
         return NULL;
     }
     cJSON *out = jsonCondition(cond);
@@ -161,7 +162,7 @@ static cJSON *jsonDecodeCondition(cJSON *params, char *err) {
     free(cond_bin);
 
     if (!cond) {
-        strcpy(err, "Invalid condition payload");
+        strlcpy(err, "Invalid condition payload", MAX_ERR_LEN);
         return NULL;
     }
 
@@ -188,7 +189,7 @@ static cJSON *jsonSignTreeEd25519(cJSON *params, char *err) {
     }
 
     if (skLength != 32) {
-        strcpy(err, "privateKey wrong length");
+        strlcpy(err, "privateKey wrong length", MAX_ERR_LEN);
     }
     
     size_t msgLength;
@@ -225,7 +226,7 @@ static cJSON *jsonSignTreeSecp256k1(cJSON *params, char *err) {
     }
 
     if (skLength != SECP256K1_SK_SIZE) {
-        strcpy(err, "privateKey wrong length");
+        strlcpy(err, "privateKey wrong length", MAX_ERR_LEN);
     }
     
     size_t msgLength;
@@ -329,7 +330,7 @@ static cJSON* execJsonRPC(cJSON *root, char *err) {
 
 
 char *cc_jsonRPC(char* input) {
-    char err[1000] = "\0";
+    char err[MAX_ERR_LEN] = "\0";
     cJSON *out;
     cJSON *root = cJSON_Parse(input);
     if (!root) out = jsonErr("Error parsing JSON request");

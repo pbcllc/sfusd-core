@@ -19,7 +19,7 @@
  */
 #include "CCinclude.h"
 
-#ifdef TESTMODE           
+#ifdef TESTMODE
     #define MIN_NON_NOTARIZED_CONFIRMS 2
 #else
     #define MIN_NON_NOTARIZED_CONFIRMS 101
@@ -190,7 +190,7 @@ void CCaddr2set(struct CCcontract_info *cp,uint8_t evalcode,CPubKey pk,uint8_t *
     cp->unspendableEvalcode2 = evalcode;
     cp->unspendablepk2 = pk;
     memcpy(cp->unspendablepriv2,priv,32);
-    strcpy(cp->unspendableaddr2,coinaddr);
+    strlcpy(cp->unspendableaddr2,coinaddr,ARRAYSIZE(cp->unspendableaddr2));
 }
 
 void CCaddr3set(struct CCcontract_info *cp,uint8_t evalcode,CPubKey pk,uint8_t *priv,char *coinaddr)
@@ -198,7 +198,7 @@ void CCaddr3set(struct CCcontract_info *cp,uint8_t evalcode,CPubKey pk,uint8_t *
     cp->unspendableEvalcode3 = evalcode;
     cp->unspendablepk3 = pk;
     memcpy(cp->unspendablepriv3,priv,32);
-    strcpy(cp->unspendableaddr3,coinaddr);
+    strlcpy(cp->unspendableaddr3,coinaddr,ARRAYSIZE(cp->unspendableaddr3));
 }
 
 void CCaddr1of2set(struct CCcontract_info *cp, CPubKey pk1, CPubKey pk2, uint8_t *priv, char *coinaddr)
@@ -206,7 +206,7 @@ void CCaddr1of2set(struct CCcontract_info *cp, CPubKey pk1, CPubKey pk2, uint8_t
 	cp->coins1of2pk[0] = pk1;
 	cp->coins1of2pk[1] = pk2;
     memcpy(cp->coins1of2priv,priv,32);
-    strcpy(cp->coins1of2addr,coinaddr);
+    strlcpy(cp->coins1of2addr,coinaddr,ARRAYSIZE(cp->coins1of2addr));
 }
 
 void CCaddrTokens1of2set(struct CCcontract_info *cp, CPubKey pk1, CPubKey pk2, uint8_t *priv, char *tokenaddr)
@@ -214,9 +214,18 @@ void CCaddrTokens1of2set(struct CCcontract_info *cp, CPubKey pk1, CPubKey pk2, u
 	cp->tokens1of2pk[0] = pk1;
 	cp->tokens1of2pk[1] = pk2;
     memcpy(cp->tokens1of2priv,priv,32);
-	strcpy(cp->tokens1of2addr, tokenaddr);
+	strlcpy(cp->tokens1of2addr, tokenaddr, ARRAYSIZE(cp->tokens1of2addr));
 }
-
+/**
+ * @brief
+ *
+ * @param destaddr - buffer [64] for store address, belongs to scriptPubKey. Caller should provide (and guarantee)
+ *                   that buffer have at least 64-bytes size to store the address. All calls to this proc are
+ *                   satisfied this rule.
+ * @param scriptPubKey - script for extracting address.
+ * @return true
+ * @return false
+ */
 bool Getscriptaddress(char *destaddr,const CScript &scriptPubKey)
 {
     CTxDestination address; txnouttype whichType;
@@ -225,20 +234,32 @@ bool Getscriptaddress(char *destaddr,const CScript &scriptPubKey)
     {
         if ( ExtractDestination(scriptPubKey,address) != 0 )
         {
-            strcpy(destaddr,(char *)EncodeDestination(address).c_str());
+            strlcpy(destaddr,(char *)EncodeDestination(address).c_str(), 64);
             return(true);
         }
     }
     //LogPrintf("ExtractDestination failed\n");
     return(false);
 }
-
+/**
+ * @brief Get the Customscriptaddress object
+ *
+ * @param destaddr - buffer [64] for store address, belongs to scriptPubKey. Caller should provide (and guarantee)
+ *                   that buffer have at least 64-bytes size to store the address. All calls to this proc are
+ *                   satisfied this rule.
+ * @param scriptPubKey - script for extracting address.
+ * @param taddr
+ * @param prefix
+ * @param prefix2
+ * @return true
+ * @return false
+ */
 bool GetCustomscriptaddress(char *destaddr,const CScript &scriptPubKey,uint8_t taddr,uint8_t prefix, uint8_t prefix2)
 {
     CTxDestination address; txnouttype whichType;
     if ( ExtractDestination(scriptPubKey,address) != 0 )
     {
-        strcpy(destaddr,(char *)GetCustomBitcoinAddressStr(address,taddr,prefix,prefix2).c_str());
+        strlcpy(destaddr,(char *)GetCustomBitcoinAddressStr(address,taddr,prefix,prefix2).c_str(), 64);
         return(true);
     }
     //LogPrintf("ExtractDestination failed\n");
@@ -548,7 +569,7 @@ uint256 CCOraclesReverseScan(char const *logcategory,uint256 &txid,int32_t heigh
 {
     CTransaction tx; uint256 hash,mhash,bhash,hashBlock,oracletxid; int32_t len,len2,numvouts;
     int64_t val,merkleht; CPubKey pk; std::vector<uint8_t>data; char str[65],str2[65];
-    
+
     txid = zeroid;
     LogPrintf("%s - start reverse scan %s\n",logcategory,uint256_str(str,batontxid));
     while ( myGetTransaction(batontxid,tx,hashBlock) != 0 && (numvouts= tx.vout.size()) > 0 )
@@ -658,7 +679,7 @@ bool komodo_txnotarizedconfirmed(uint256 txid)
     int32_t confirms,notarized=0,txheight=0,currentheight=0;;
     CTransaction tx;
     uint256 hashBlock;
-    CBlockIndex *pindex;    
+    CBlockIndex *pindex;
     char symbol[65],dest[65]; struct komodo_state *sp;
 
         if ( myGetTransaction(txid,tx,hashBlock) == 0 )
@@ -680,17 +701,17 @@ bool komodo_txnotarizedconfirmed(uint256 txid)
         {
             LogPrintf("komodo_txnotarizedconfirmed backwards heights for txid %s hts.(%d %d)\n",txid.ToString().c_str(),txheight,(int32_t)pindex->GetHeight());
             return(0);
-        }    
+        }
         confirms=1 + pindex->GetHeight() - txheight;
 
 //notarized temporary omitted
-//    if ((sp= komodo_stateptr(symbol,dest)) != 0 && (notarized=sp->NOTARIZED_HEIGHT) > 0 && txheight > sp->NOTARIZED_HEIGHT)  notarized=0;            
-//#ifdef TESTMODE           
+//    if ((sp= komodo_stateptr(symbol,dest)) != 0 && (notarized=sp->NOTARIZED_HEIGHT) > 0 && txheight > sp->NOTARIZED_HEIGHT)  notarized=0;
+//#ifdef TESTMODE
 //    notarized=0;
 //#endif //TESTMODE
 //    if (notarized>0 && confirms > 1)
 //        return (true);
-//    else 
+//    else
     if (notarized==0 && confirms >= MIN_NON_NOTARIZED_CONFIRMS)
         return (true);
     return (false);
@@ -700,7 +721,7 @@ CPubKey check_signing_pubkey(CScript scriptSig)
 {
 	bool found = false;
 	CPubKey pubkey;
-	
+
     auto findEval = [](CC *cond, struct CCVisitor _) {
         bool r = false;
 
