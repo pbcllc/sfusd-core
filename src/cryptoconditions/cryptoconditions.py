@@ -6,18 +6,27 @@ import ctypes
 import base64
 import os.path
 import argparse
+import platform
 from ctypes import *
 
 
-so = cdll.LoadLibrary('.libs/libcryptoconditions.so')
-so.jsonRPC.restype = c_char_p
+# get the so lib filename
+# print('platform', platform.uname()[0])
+if platform.uname()[0] == "Windows":
+    name = "libcryptoconditionstest.dll"
+elif platform.uname()[0] == "Darwin":
+    name = "libcryptoconditionstest.dylib"
+else:
+    name = "libcryptoconditionstest.so"
 
+so = cdll.LoadLibrary('.libs/'+name)
+so.cc_jsonRPC.restype = c_char_p
 
 def jsonRPC(method, params, load=True):
     out = so.cc_jsonRPC(json.dumps({
         'method': method,
         'params': params,
-    }))
+    }).encode('ascii'))
     return json.loads(out) if load else out
 
 
