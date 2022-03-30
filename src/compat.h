@@ -86,6 +86,13 @@ typedef int32_t ssize_t;
 size_t strnlen( const char *start, size_t max_len);
 #endif // HAVE_DECL_STRNLEN
 
+#if defined(__APPLE__) && __DARWIN_C_LEVEL >= __DARWIN_C_FULL
+#undef HAVE_DECL_STRLCPY
+#undef HAVE_DECL_STRLCAT
+#define HAVE_DECL_STRLCPY 1
+#define HAVE_DECL_STRLCAT 1
+#endif
+
 #if HAVE_DECL_STRLCPY == 0
 size_t
 strlcpy(char *dst, const char *src, size_t dsize);

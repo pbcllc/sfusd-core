@@ -14,6 +14,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include "strl.h"
+
 #if defined(HAVE_CONFIG_H)
 #include <config/bitcoin-config.h>
 #endif
