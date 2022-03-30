@@ -1,13 +1,10 @@
-lib_LTLIBRARIES=libcryptoconditions.la
+lib_LTLIBRARIES=libcryptoconditionstest.la
 noinst_LTLIBRARIES=$(CRYPTOCONDITIONS_CORE)
-SUBDIRS = src/include/secp256k1
 
-include_HEADERS = include/cryptoconditions.h
-
-# Have a separate build target for cryptoconditions that does not contain secp256k1
-
-libcryptoconditions_la_SOURCES = include/cryptoconditions.h
-libcryptoconditions_la_LIBADD = $(CRYPTOCONDITIONS_CORE) $(LIBSECP256K1)
+# Have a separate build target for cryptoconditions for tests:
+libcryptoconditionstest_la_SOURCES = include/cryptoconditions.h
+libcryptoconditionstest_la_LIBADD = $(CRYPTOCONDITIONS_CORE) src/include/secp256k1/src/libsecp256k1_la-secp256k1.lo
+libcryptoconditionstest_la_LDFLAGS = -lgmp
 
 AM_CFLAGS = -I$(top_srcdir)/src/asn -I$(top_srcdir)/include -I$(top_srcdir)/src/include \
 			-Wall -Wno-pointer-sign -Wno-discarded-qualifiers
@@ -79,14 +76,19 @@ libcryptoconditions_core_la_SOURCES = \
 test:
 	bash -c '[ -d .env ] || virtualenv .env -p python3'
 	.env/bin/pip install pytest
+	.env/bin/pip install secp256k1
+if BUILD_DARWIN
+	lldb -batch -o run -o continue -o bt -- .env/bin/python -m pytest -s -x -v 2>&1 | grep -v ^"invalid thread"$
+else
 	gdb -batch -ex run -ex bt --args .env/bin/python -m pytest -s -x -v 2>&1 | grep -v ^"No stack."$
+endif
 
 test-debug-interactive:
+if BUILD_DARWIN
+	lldb -o run -- python3 -m pytest -s -x -v
+else
 	gdb -ex run --args python3 -m pytest -s -x -v
+endif
 
 asn:
-	cd src/asn; \
-		mv asn_system.h asn_system.bak; \
-		rm *.c *.h; \
-		asn1c CryptoConditions.asn; \
-		mv asn_system.bak asn_system.h
+	@echo "Note: to generate new asn sources do this in a separate directory: copy your new CryptoConditions.asn there, generate sources using exactly the same asn1c version (see it in the asn sources), then copy generated files back into src/asn dir"

@@ -70,5 +70,26 @@ AC_FUNC_MALLOC
 AC_FUNC_STRTOD
 AC_CHECK_FUNCS([localeconv memchr memset])
 
+# set linux or macos build env
+build_linux=no
+build_mac=no
+case $host in
+    *linux*)
+        build_linux=yes
+        ;;
+    *darwin*)
+        build_mac=yes
+        ;;
+    *)
+        AC_MSG_ERROR(["OS $host_os is not supported for build"])
+        ;;
+esac
+AM_CONDITIONAL([BUILD_LINUX], [test x$build_linux = xyes])
+AM_CONDITIONAL([BUILD_DARWIN], [test x$build_mac = xyes])
+
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
+
+echo "  host           = $host"
+
+
