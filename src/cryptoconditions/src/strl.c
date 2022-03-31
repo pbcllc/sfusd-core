@@ -21,7 +21,7 @@
  * chars will be copied.  Always NUL terminates (unless dsize == 0).
  * Returns strlen(src); if retval >= dsize, truncation occurred.
  */
-#ifndef HAVE_STRLCPY
+#ifndef HAVE_DECL_STRLCPY
 size_t
 strlcpy(char *dst, const char *src, size_t dsize)
 {
@@ -55,7 +55,7 @@ strlcpy(char *dst, const char *src, size_t dsize)
  * Returns strlen(src) + MIN(dsize, strlen(initial dst)).
  * If retval >= dsize, truncation occurred.
  */
-#ifndef HAVE_STRLCAT
+#ifndef HAVE_DECL_STRLCAT
 size_t
 strlcat(char *dst, const char *src, size_t dsize)
 {

@@ -10,6 +10,10 @@ AC_CONFIG_SUBDIRS([src/include/secp256k1])
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 LT_INIT
 
+AH_TOP([#ifndef CRYPTOCONDITIONS_CONFIG_H])
+AH_TOP([#define CRYPTOCONDITIONS_CONFIG_H])
+AH_BOTTOM([#endif //CRYPTOCONDITIONS_CONFIG_H])
+
 # Checks for programs.
 AC_PROG_CC
 AC_PROG_CC_STDC
@@ -33,42 +37,13 @@ AC_TYPE_UINT64_T
 AC_TYPE_UINT8_T
 AC_CHECK_TYPES([ptrdiff_t])
 
-AC_MSG_CHECKING([for strlcpy])
-AC_RUN_IFELSE([AC_LANG_PROGRAM([[#include <string.h>]],[[
-               char a[2];
-               if (strlcpy(a, "yes", 2) != 3)
-                   return 1;]])],
-              [
-               AC_MSG_RESULT([yes])
-               AC_DEFINE_UNQUOTED([HAVE_STRLCPY], 1,
-                                  [Define to 1 if you have the strlcpy function.])
-              ],
-              [
-               AC_MSG_RESULT([no])
-               AC_DEFINE_UNQUOTED([HAVE_STRLCPY], 0,
-                                  [Define to 1 if you have the strlcpy function.])
-              ])
-
-AC_MSG_CHECKING([for strlcat])
-AC_RUN_IFELSE([AC_LANG_PROGRAM([[#include <string.h>]],[[
-               char a[4] = "no";
-               if (strlcat(a, "yes", 4) != 5)
-                   return 1;]])],
-              [
-               AC_MSG_RESULT([yes])
-               AC_DEFINE_UNQUOTED([HAVE_STRLCAT], 1,
-                                  [Define to 1 if you have the strlcat function.])
-              ],
-              [
-               AC_MSG_RESULT([no])
-               AC_DEFINE_UNQUOTED([HAVE_STRLCAT], 0,
-                                  [Define to 1 if you have the strlcat function.])
-              ])
-
 # Checks for library functions.
 AC_FUNC_MALLOC
 AC_FUNC_STRTOD
 AC_CHECK_FUNCS([localeconv memchr memset])
+
+AC_CHECK_DECLS([strlcpy])
+AC_CHECK_DECLS([strlcat])
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
