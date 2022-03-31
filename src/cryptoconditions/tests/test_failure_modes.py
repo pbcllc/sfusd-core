@@ -39,7 +39,7 @@ def test_large_fulfillment():
     buflen = len(f) + 1000  # Wiggle room
     buf = ctypes.create_string_buffer(buflen)
     assert so.cc_fulfillmentBinary(cond, buf, buflen)
-    # so.cc_free(cond)
+    so.cc_free(cond)
 
 
 def test_decode_valid_condition():
