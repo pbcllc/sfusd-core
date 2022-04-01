@@ -13,12 +13,12 @@
 extern "C" {
 #endif
 
-#ifndef HAVE_DECL_STRLCPY
+#if !defined(HAVE_DECL_STRLCPY) || HAVE_DECL_STRLCPY == 0
 size_t
 strlcpy(char *dst, const char *src, size_t dsize);
 #endif
 
-#ifndef HAVE_DECL_STRLCAT
+#if !defined(HAVE_DECL_STRLCAT) || HAVE_DECL_STRLCAT == 0 
 size_t
 strlcat(char *dst, const char *src, size_t dsize);
 #endif
