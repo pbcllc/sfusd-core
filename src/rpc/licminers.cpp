@@ -35,7 +35,7 @@ UniValue letsdebug(const JSONRPCRequest& request)
     }
 
     const std::set<CScript>& setAllowedMiners = m_params.GetAllowedLicensedMinersScriptsAtHeight(nHeight);
-    ret.push_back(Pair("total_scripts_allowed", setAllowedMiners.size()));
+    ret.push_back(Pair("total_scripts_allowed", (int)setAllowedMiners.size()));
 
     return ret;
 }
