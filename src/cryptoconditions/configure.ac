@@ -38,9 +38,8 @@ AC_TYPE_UINT8_T
 AC_CHECK_TYPES([ptrdiff_t])
 
 # Checks for library functions.
-AC_FUNC_MALLOC
 AC_FUNC_STRTOD
-AC_CHECK_FUNCS([localeconv memchr memset])
+AC_CHECK_FUNCS([localeconv memchr memset malloc realloc])
 
 AC_CHECK_DECLS([strlcpy])
 AC_CHECK_DECLS([strlcat])
